@@ -1,33 +1,49 @@
-monit-windows-agent is a project that aims to re-implement a Windows <a href="http://mmonit.com/monit">Monit</a> Agent from scratch, with the primary goal to report to MMonit.
+> monit-windows-agent is a project that aims to re-implement a Windows [Monit](http://www.mmonit.com "Monit") Agent from scratch, with the primary goal to push status reports to [M/Monit](http://www.mmonit.com "M/Monit").
 
-# Current Project Status #
 
-## What already works: ##
+# Current Project Status
 
- - Agent is already running on Command Line as well as a Windows Service
- - Agent Client is already reporting (pushing data) system status like CPU, HDD, Memory usage to MMonit
- - Agent Server is partly implemented and already responding to /_status?format=xml - request as well as to /_ping request
+## What already works:
 
-## What is still to do? ##
+ - Agent is **already running** on command line as well as a Windows Service
+ - Agent **client is already reporting system status** like CPU, HDD, Memory usage to M/Monit
+ - Agent **server is running** with implemented responses to /\_status?format=xml, /\_getid and /\_ping requests
+ - Current configuration takes place in a proprietary XML file
 
-- Integration of Swap Memory status
-- Agent must be made configurable for alerts
-  - It's TBD if there should be a monitrc parser implemented in .NET, or if the configuration should happen in a totally different way (for e.g. via a prorpietary XML file)
-  - Also a TODO is to find out whether the "controlfile" directive from the monitrc configuration is needed by the MMonit server, and if yes, what it does with it. That could limit our approach to utilize a proprietary configuration for the Windows Agent.
-- Agent Server must respond to /_doAction - request and execute the according action
+## Screenshots
+- M/Monit view of the windows agent:
+![monit-windows-agent Screenshot from M/Monit](img/monit-windows-agent-mmonit-1.png)
 
-## Yeah, but where's the code? ##
+- Running monit windows service:
+![monit-windows-agent Windows Service Screenshot](img/monit-windows-agent-service-1.png)
 
-### SHOW YOUR INTEREST! ###
+## What is still to do?
+
+- **Alerting**: Agent must be made configurable for alerts
+- Pending design decision if there should be a **monitrc parser** implemented in .NET, or if the configuration should be done **proprietary** (XML file etc)
+ - **Research** if the "controlfile" directive from the monitrc configuration is needed by the M/Monit server, and if yes, what it does with it. That could limit our approach to utilize a proprietary configuration for the Windows Agent.
+- **Agent Server must respond to /_doAction** - request and execute the according action
+- Integration of **Swap Memory** status
+- Setting up a proper community and getting some contributors (see below) ;)
+
+## Yeah, but where's the code?
+
+### SHOW YOUR INTEREST!
 
 - Before taking the time to put the code on GitHub and also to maintain it afterwards, I want to draw some attention on it
 - I want to get some feedback if the Monit community really wants to have this Windows Client, and if some of you are willing to contribute.
 - If no one cares, or if there's no demand, I won't publish this anytime soon.
-- Use the issue tracker to show your demand: [https://github.com/derFunk/monit-windows-agent/issues/1](https://github.com/derFunk/monit-windows-agent/issues/1 "Demand Hub")
+- Use the issue tracker to show your demand: [Demand Hub Issue](https://github.com/derFunk/monit-windows-agent/issues/1 "Demand Hub")
 
-# Screenshots #
-- MMonit view of the windows agent:
-![monit-windows-agent Screenshot from MMonit](img/monit-windows-agent-mmonit-1.png)
+# Looking for contributors!
+- You are a pro in parser generation (like with [Bison](http://www.gnu.org/software/bison/), [grammar files](http://dinosaur.compilertools.net/bison/bison_6.html), and it's piece of cake for you to generate a parser [from this (monitrc grammar)](https://bitbucket.org/tildeslash/monit/src/HEAD/src/p.y?at=master)? Then yell at [Demand Hub Issue](https://github.com/derFunk/monit-windows-agent/issues/1 "Demand Hub")
+- If you want to contribute in any other way: Wave at [Demand Hub Issue](https://github.com/derFunk/monit-windows-agent/issues/1 "Demand Hub")
+- You can contribute some insights into the internals of M/Monit? Sneak at [Demand Hub Issue](https://github.com/derFunk/monit-windows-agent/issues/1 "Demand Hub")
 
-- Running monit windows service:
-![monit-windows-agent Windows Service Screenshot](img/monit-windows-agent-service-1.png)
+## How does developing the Monit Windows Agent work?
+
+- Programmed in C#
+- Using Monit source code as a basis
+ - Monit Source Code is here: [https://bitbucket.org/tildeslash/monit/src](https://bitbucket.org/tildeslash/monit/src "https://bitbucket.org/tildeslash/monit/src")
+- M/Monit source code is not available
+- Using "sniffed" XML (and [source code](https://bitbucket.org/tildeslash/monit/src/HEAD/src/xml.c?at=master) as the basis for the xml format (near to "reverse engineering" because no XSD available)
