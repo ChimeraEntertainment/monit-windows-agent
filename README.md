@@ -43,7 +43,7 @@
 ## How does developing the Monit Windows Agent work?
 
 - Programmed in C#
-- Using Monit source code as a basis
+- Using Monit source code as a (documentation) basis (no re-use of operative code of course)
  - Monit Source Code is here: [https://bitbucket.org/tildeslash/monit/src](https://bitbucket.org/tildeslash/monit/src "https://bitbucket.org/tildeslash/monit/src")
 - M/Monit source code is not available
 - Using "sniffed" XML (and [source code](https://bitbucket.org/tildeslash/monit/src/HEAD/src/xml.c?at=master) as the basis for the xml format (near to "reverse engineering" because no XSD available)
