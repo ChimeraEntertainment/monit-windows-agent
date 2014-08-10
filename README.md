@@ -2,7 +2,7 @@
 
 
 # Current Project Status
-(We need your help, see <a href="#please-contribute">Please contribute</a>.
+(We need your help, see <a href="#please-contribute">Please contribute</a>.)
 
 ## What already works
 
