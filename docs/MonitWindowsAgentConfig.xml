@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<MonitWindowsAgentConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Period>30</Period>
+  <Services ServiceName="YOUR_SERVICENAME_HERE">
+    <DependentServiceNames>DEPENDENT_SERVICE_HERE</DependentServiceNames>
+  </Services>
+  <Services ServiceName="YOUR_SERVICENAME_HERE">
+    <DependentServiceNames>DEPENDENT_SERVICE_HERE</DependentServiceNames>
+  </Services>
+  <FailedStarts>5</FailedStarts>
+  <MMonitCollectorUrl>http://server:8080/collector</MMonitCollectorUrl>
+  <MMonitCollectorUsername>monit</MMonitCollectorUsername>
+  <MMonitCollectorPassword>monit</MMonitCollectorPassword>
+
+  <HttpdPort>2812</HttpdPort>
+  <HttpdUsername>admin</HttpdUsername>
+  <HttpdPassword>monit</HttpdPassword>
+  <HttpdBindIp>0.0.0.0</HttpdBindIp>
+
+</MonitWindowsAgentConfig>

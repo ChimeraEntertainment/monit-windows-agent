@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<monit id="aee9805b055ef65329fdf4ee9122cff3" incarnation="1407169749" version="5.8.1">
+	<server>
+		<uptime>0</uptime>
+		<poll>120</poll>
+		<startdelay>0</startdelay>
+		<localhostname>chmacone</localhostname>
+		<controlfile>/etc/monitrc</controlfile>
+		<httpd>
+			<address>192.168.0.70</address>
+			<port>2812</port>
+			<ssl>0</ssl>
+		</httpd>
+		<credentials>
+			<username>admin</username>
+			<password>monit</password>
+		</credentials>
+	</server>
+	<platform>
+		<name>Darwin</name>
+		<release>12.5.0</release>
+		<version>Darwin Kernel Version 12.5.0: Sun Sep 29 13:33:47 PDT 2013; root:xnu-2050.48.12~1/RELEASE_X86_64</version>
+		<machine>x86_64</machine>
+		<cpu>4</cpu>
+		<memory>4194304</memory>
+		<swap>5242880</swap>
+	</platform>
+	<services>
+		<service name="Jenkins">
+			<type>4</type>
+			<collected_sec>1407169749</collected_sec>
+			<collected_usec>881657</collected_usec>
+			<status>0</status>
+			<status_hint>0</status_hint>
+			<monitor>2</monitor>
+			<monitormode>0</monitormode>
+			<pendingaction>0</pendingaction>
+		</service>
+		<service name="chmacone">
+			<type>5</type>
+			<collected_sec>1407169749</collected_sec>
+			<collected_usec>881964</collected_usec>
+			<status>0</status>
+			<status_hint>0</status_hint>
+			<monitor>2</monitor>
+			<monitormode>0</monitormode>
+			<pendingaction>0</pendingaction>
+		</service>
+		<service name="root">
+			<type>0</type>
+			<collected_sec>1407169749</collected_sec>
+			<collected_usec>882002</collected_usec>
+			<status>0</status>
+			<status_hint>0</status_hint>
+			<monitor>2</monitor>
+			<monitormode>0</monitormode>
+			<pendingaction>0</pendingaction>
+		</service>
+		<service name="SSD">
+			<type>0</type>
+			<collected_sec>1407169749</collected_sec>
+			<collected_usec>882109</collected_usec>
+			<status>0</status>
+			<status_hint>0</status_hint>
+			<monitor>2</monitor>
+			<monitormode>0</monitormode>
+			<pendingaction>0</pendingaction>
+		</service>
+	</services>
+	<servicegroups/>
+	<event>
+		<collected_sec>1407169749</collected_sec>
+		<collected_usec>882604</collected_usec>
+		<service>Monit</service>
+		<type>5</type>
+		<id>65536</id> <!-- Event_Instance   = 0x10000, --> 
+		<state>2</state>
+		<action>6</action>
+		<message><![CDATA[Monit reloaded]]></message>
+	</event>
+</monit>

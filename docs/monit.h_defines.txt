@@ -1,0 +1,147 @@
+﻿
+#define MONITRC            "monitrc"
+#define TIMEFORMAT         "%Z %b %e %T"
+#define STRERROR            strerror(errno)
+#define STRLEN             256
+#ifndef USEC_PER_SEC
+#define USEC_PER_SEC       1000000L
+#endif
+#define USEC_PER_MSEC      1000L
+
+#define ARGMAX             64
+#define HTTP_CONTENT_MAX   (1024*1000)
+/* Set event queue directory mode: "drwx------" */
+#define QUEUEMASK          0077
+/* Set file mode: "drw-------" */
+#define PRIVATEMASK        0177
+/* Set log file mode: "-rw-r-----" */
+#define LOGMASK            0137
+/* Set pid file mode: "-rw-r--r--" */
+#define MYPIDMASK          0122
+#define MYPIDDIR           PIDDIR
+#define MYPIDFILE          "monit.pid"
+#define MYSTATEFILE        "monit.state"
+#define MYIDFILE           "monit.id"
+#define MYEVENTLISTBASE    "/var/monit"
+
+#define LOCALHOST          "localhost"
+
+#define PORT_SMTP          25
+#define PORT_SMTPS         465
+#define PORT_HTTP          80
+#define PORT_HTTPS         443
+
+#define SSL_TIMEOUT        15
+#define SMTP_TIMEOUT       30
+
+#define START_DELAY        0
+#define EXEC_TIMEOUT       30
+#define PROGRAM_TIMEOUT    600
+
+#define START_HTTP         1
+#define STOP_HTTP          2
+
+#define TRUE               1
+#define FALSE              0
+
+#define MONITOR_NOT        0x0
+#define MONITOR_YES        0x1
+#define MONITOR_INIT       0x2
+#define MONITOR_WAITING    0x4
+
+#define EVERY_CYCLE        0
+#define EVERY_SKIPCYCLES   1
+#define EVERY_CRON         2
+#define EVERY_NOTINCRON    3
+
+#define STATE_SUCCEEDED    0
+#define STATE_FAILED       1
+#define STATE_CHANGED      2
+#define STATE_CHANGEDNOT   3
+#define STATE_INIT         4
+
+#define MODE_ACTIVE        0
+#define MODE_PASSIVE       1
+#define MODE_MANUAL        2
+
+typedef enum {
+        Operator_Greater = 0,
+        Operator_Less,
+        Operator_Equal,
+        Operator_NotEqual
+} Operator_Type;
+
+#define TIME_SECOND        1
+#define TIME_MINUTE        60
+#define TIME_HOUR          3600
+#define TIME_DAY           86400
+
+#define ACTION_IGNORE      0
+#define ACTION_ALERT       1
+#define ACTION_RESTART     2
+#define ACTION_STOP        3
+#define ACTION_EXEC        4
+#define ACTION_UNMONITOR   5
+#define ACTION_START       6
+#define ACTION_MONITOR     7
+
+#define TYPE_FILESYSTEM    0
+#define TYPE_DIRECTORY     1
+#define TYPE_FILE          2
+#define TYPE_PROCESS       3
+#define TYPE_HOST          4
+#define TYPE_SYSTEM        5
+#define TYPE_FIFO          6
+#define TYPE_PROGRAM       7
+
+#define RESOURCE_ID_CPU_PERCENT       1
+#define RESOURCE_ID_MEM_PERCENT       2
+#define RESOURCE_ID_MEM_KBYTE         3
+#define RESOURCE_ID_LOAD1             4
+#define RESOURCE_ID_LOAD5             5
+#define RESOURCE_ID_LOAD15            6
+#define RESOURCE_ID_CHILDREN          7
+#define RESOURCE_ID_TOTAL_MEM_KBYTE   8
+#define RESOURCE_ID_TOTAL_MEM_PERCENT 9
+#define RESOURCE_ID_INODE             10
+#define RESOURCE_ID_SPACE             11
+#define RESOURCE_ID_CPUUSER           12
+#define RESOURCE_ID_CPUSYSTEM         13
+#define RESOURCE_ID_CPUWAIT           14
+#define RESOURCE_ID_TOTAL_CPU_PERCENT 15
+#define RESOURCE_ID_SWAP_PERCENT      16
+#define RESOURCE_ID_SWAP_KBYTE        17
+
+#define DIGEST_CLEARTEXT   1
+#define DIGEST_CRYPT       2
+#define DIGEST_MD5         3
+#define DIGEST_PAM         4
+
+#define UNIT_BYTE          1
+#define UNIT_KILOBYTE      1024
+#define UNIT_MEGABYTE      1048580
+#define UNIT_GIGABYTE      1073740000
+
+#define HASH_UNKNOWN       0
+#define HASH_MD5           1
+#define HASH_SHA1          2
+#define DEFAULT_HASH       HASH_MD5
+/* Length of the longest message digest in bytes */
+#define MD_SIZE            65
+
+#define PROTOCOL_NULL      0
+#define PROTOCOL_HTTP      1
+#define PROTOCOL_HTTPS     2
+
+#define LEVEL_FULL         0
+#define LEVEL_SUMMARY      1
+
+#define LEVEL_NAME_FULL    "full"
+#define LEVEL_NAME_SUMMARY "summary"
+
+#define HANDLER_SUCCEEDED  0x0
+#define HANDLER_ALERT      0x1
+#define HANDLER_MMONIT     0x2
+#define HANDLER_MAX        HANDLER_MMONIT
+
+#define ICMP_ATTEMPT_COUNT      3

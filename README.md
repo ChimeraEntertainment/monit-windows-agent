@@ -1,9 +1,10 @@
-> monit-windows-agent is a project that aims to re-implement a Windows [Monit](http://www.mmonit.com "Monit") Agent from scratch, with the primary goal to push status reports to [M/Monit](http://www.mmonit.com "M/Monit").
+> monit-windows-agent is a project that aims to reimplement a Windows [Monit](http://www.mmonit.com "Monit") Agent from scratch, with the primary goal to push status reports to [M/Monit](http://www.mmonit.com "M/Monit").
 
 
 # Current Project Status
+(We need your help, see <a href="#please-contribute">Please contribute</a>.
 
-## What already works:
+## What already works
 
  - Agent is **already running** on command line as well as a Windows Service
  - Agent **client is already reporting system status** like CPU, HDD, Memory usage to M/Monit
@@ -20,30 +21,30 @@
 ## What is still to do?
 
 - **Alerting**: Agent must be made configurable for alerts
-- Pending design decision if there should be a **monitrc parser** implemented in .NET, or if the configuration should be done **proprietary** (XML file etc)
- - **Research** if the "controlfile" directive from the monitrc configuration is needed by the M/Monit server, and if yes, what it does with it. That could limit our approach to utilize a proprietary configuration for the Windows Agent.
-- **Agent Server must respond to /_doAction** - request and execute the according action
-- Integration of **Swap Memory** status
+- Pending design decision if there should be a **monitrc parser** implemented in .NET, or if the configuration should be done *proprietary** (XML file etc)
+- **Research**
+  - Which data and behaviour does M/Monit expect from its Monit clients? 
+ - Specific (TODO: should be made an Issue): If the "controlfile" directive from the monitrc configuration is mandatorily needed by the M/Monit server, and if yes, what it does with it. That could limit our approach to utilize a proprietary configuration for the Windows Agent.
+- **Agent Server must respond to /_doAction and other vital web requests** and execute the according action
+- Integration of **Swap Memory** status for Windows
 - Setting up a proper community and getting some contributors (see below) ;)
 
-## Yeah, but where's the code?
-
-### SHOW YOUR INTEREST!
-
-- Before taking the time to put the code on GitHub and also to maintain it afterwards, I want to draw some attention on it
-- I want to get some feedback if the Monit community really wants to have this Windows Client, and if some of you are willing to contribute.
-- If no one cares, or if there's no demand, I won't publish this anytime soon.
-- Use the issue tracker to show your demand: [Demand Hub Issue](https://github.com/derFunk/monit-windows-agent/issues/1 "Demand Hub")
-
-# Looking for contributors!
-- You are a pro in parser generation (like with [Bison](http://www.gnu.org/software/bison/), [grammar files](http://dinosaur.compilertools.net/bison/bison_6.html), and it's piece of cake for you to generate a parser [from this (monitrc grammar)](https://bitbucket.org/tildeslash/monit/src/HEAD/src/p.y?at=master)? Then yell at [Demand Hub Issue](https://github.com/derFunk/monit-windows-agent/issues/1 "Demand Hub")
-- If you want to contribute in any other way: Wave at [Demand Hub Issue](https://github.com/derFunk/monit-windows-agent/issues/1 "Demand Hub")
-- You can contribute some insights into the internals of M/Monit? Sneak at [Demand Hub Issue](https://github.com/derFunk/monit-windows-agent/issues/1 "Demand Hub")
+# Please contribute!
+- I'm not going to achieve all the goals alone
+- Not only developers are needed, but also folks who can provide insights into the API and internals of M/Monit.
+- You are a pro in parser generation (like with [Bison](http://www.gnu.org/software/bison/), [grammar files](http://dinosaur.compilertools.net/bison/bison_6.html), and it's piece of cake for you to generate a parser [from this (monitrc grammar)](https://bitbucket.org/tildeslash/monit/src/HEAD/src/p.y?at=master)?
 
 ## How does developing the Monit Windows Agent work?
 
-- Programmed in C#
-- Using Monit source code as a (documentation) basis (no re-use of operative code of course)
+- Programmed in C# / .NET 3.5
+- Using Monit source code as a (documentation) basis
  - Monit Source Code is here: [https://bitbucket.org/tildeslash/monit/src](https://bitbucket.org/tildeslash/monit/src "https://bitbucket.org/tildeslash/monit/src")
 - M/Monit source code is not available
 - Using "sniffed" XML (and [source code](https://bitbucket.org/tildeslash/monit/src/HEAD/src/xml.c?at=master) as the basis for the xml format (near to "reverse engineering" because no XSD available)
+- Using <a href="https://github.com/pvginkel/NHttp">NHTTP</a> for the web server implementation
+- The xml data classes are created by Visual Studio 2013's "Paste XML as class" - functionality. You have to switch to .NET 4.5 framework to gain access to that functionality. After pasting, revert back to .NET 3.5.
+
+## Development Goals / Paradigms
+1. Reverse, Learn, Document
+2. Get it running. Follow the <a href="http://en.wikipedia.org/wiki/KISS_principle#In_software_development">KISS principle</a> first.
+3. Refactoring to patterns - make it reusable.
