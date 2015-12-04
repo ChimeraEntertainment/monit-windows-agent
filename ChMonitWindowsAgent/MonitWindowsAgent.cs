@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Timers;
-using System.Diagnostics;
-using System.IO;
+using ChMonitoring.Configuration;
 using ChMonitoring.Helpers;
+using ChMonitoring.Http;
 using ChMonitoring.MonitData;
-using ChMonitoring.MonitLogic;
-using ChMonitoring.Monitoring;
-using ChMonitoring.MonitData.XML;
+using Timer = System.Timers.Timer;
 
 namespace ChMonitoring
 {
     /**
      * TODOS:
+     *  - Cleanup all TODO-Commented Sections
      *  - Add Comments
      *  - Add Logging
      *  - Refactor to pattern
@@ -25,207 +24,181 @@ namespace ChMonitoring
      * - Alternatively: Create a completely new config format (xml?) for the windows agent.
      *   - Question: Is Mmonit using the configfile (as it is contained in the controlfile parameter in the status xml?)
      *   
-     * - Implement event alerting..
-     *  - in <monit> root node:
-     *      	<event>
-		            <collected_sec>1407169749</collected_sec>
-		            <collected_usec>882604</collected_usec>
-		            <service>Monit</service>
-		            <type>5</type>
-		            <id>65536</id> <!-- Event_Instance   = 0x10000, --> 
-		            <state>2</state>
-		            <action>6</action>
-		            <message><![CDATA[Monit reloaded]]></message>
-	            </event>
      * - In favor of testability etc, get rid of static methods and instances
      * **/
-    class MonitWindowsAgent
+
+    internal class MonitWindowsAgent
     {
-        private Timer m_timer;
-        private EventLog m_log;
+        public const string SERVER_VERSION = "5.6";
+        public const string VERSION = "5.12.2";
+        //Global Variables
+        //TODO
+        public static Run_T Run;
+        public static List<Service_T> servicelist;
+        public static List<Service_T> servicelist_conf;
+        public static List<ServiceGroup_T> servicegrouplist;
+        public static SystemInfo_T systeminfo;
+        public static Collector m_mMonitClient;
 
-        private string m_configFileName;
-        private string m_configFilePathName;
-        // private XmlDocument m_configXmlDoc;
-
-        private MMonitClient m_mMonitClient;
-        private ServiceMonitoring m_serviceMonitoring;
-        private MonitServer m_monitServer;
-
-        public static MonitWindowsAgent Instance { private set; get; }
-
-        public MonitWindowsAgent(EventLog log)
+        public static string[] actionnames =
         {
-            Instance = this;
+            "ignore", "alert", "restart", "stop", "exec", "unmonitor", "start",
+            "monitor", ""
+        };
 
-            // save the service log
-            m_log = log;
+        public static string[] modenames = {"active", "passive", "manual"};
+        public static string[] checksumnames = {"UNKNOWN", "MD5", "SHA1"};
 
-            // LoadConfig();
-            InitConfig();
-            Logger.Init();
-            InitTimer();
-
-            m_serviceMonitoring = new ServiceMonitoring();
-            m_serviceMonitoring.Start(log);
-
-            m_mMonitClient = new MMonitClient();
-            m_mMonitClient.Start();
-
-            m_monitServer = new MonitServer();
-            m_monitServer.Start();
-        }
-
-        private void InitTimer()
+        public static Dictionary<string, string> operatornames = new Dictionary<string, string>
         {
+            {">", "greater than"},
+            {"<", "less than"},
+            {"=", "equal to"},
+            {"!=", "not equal to"},
+            {"<>", "changed"}
+        };
+
+        public static string[] statusnames =
+        {
+            "Accessible", "Accessible", "Accessible", "Running",
+            "Online with all services", "Running", "Accessible", "Status ok", "UP"
+        };
+
+        public static string[] servicetypes =
+        {
+            "Filesystem", "Directory", "File", "Process", "Remote Host", "System",
+            "Fifo", "Program", "Network"
+        };
+
+        public static string[] pathnames = {"Path", "Path", "Path", "Pid file", "Path", "", "Path"};
+
+        public static string[] icmpnames =
+        {
+            "Reply", "", "", "Destination Unreachable", "Source Quench", "Redirect", "",
+            "", "Ping", "", "", "Time Exceeded", "Parameter Problem", "Timestamp Request", "Timestamp Reply",
+            "Information Request", "Information Reply", "Address Mask Request", "Address Mask Reply"
+        };
+
+        public static string[] sslnames = {"auto", "v2", "v3", "tlsv1", "tlsv1.1", "tlsv1.2", "none"};
+        private readonly Timer m_timer;
+        private bool heartbeatRunning;
+
+        public MonitWindowsAgent()
+        {
+            Run = new Run_T();
+            Run.id = UniqueWindowsId.GetOrCreateUniqueId();
+            Run.incarnation = SystemStats.ProcessRunningInSec();
+            Run.controlfile = "none"; //TODO
+            Run.startdelay = 0; //TODO
+            Run.polltime = 120; //TODO
+            Run.Env = new myenvironment();
+            Run.Env.user = SystemStats.GetHostname();
+            Run.httpd = new Httpd_T();
+            Run.httpd.port = ConfigMgr.Config.Httpd.Port;
+            Run.httpd.ssl = ConfigMgr.Config.Httpd.SSL;
+            Run.httpd.address = ConfigMgr.Config.Httpd.BindIp;
+            Run.httpd.credentials = new List<Auth_T>();
+            Run.httpd.credentials.Add(new Auth_T
+            {
+                uname = ConfigMgr.Config.Httpd.Username,
+                passwd = ConfigMgr.Config.Httpd.Password
+            });
+
+            Run.mmonits = new List<Mmonit_T>();
+            Run.mmonits.Add(new Mmonit_T
+            {
+                url = new URL_T
+                {
+                    url = ConfigMgr.Config.MMonits[0].Url,
+                    //port = ConfigMgr.Config.MMonits[0].Port,
+                    password = ConfigMgr.Config.MMonits[0].Password,
+                    user = ConfigMgr.Config.MMonits[0].Username
+                }
+            });
+
+            servicelist = new List<Service_T>();
+            servicelist_conf = new List<Service_T>();
+            ConfigMgr.Config.Services.ForEach(sc =>
+            {
+                var newS = ServiceHelper.CreateService(sc, sc.Name.ToLower());
+
+                if (newS == null)
+                    Logger.Log.Error("Service could not be created!");
+                else
+                {
+                    if (sc is ProcessConfig)
+                        ProcessHelper.AddProcess(newS);
+                    else if (sc is FilesystemConfig)
+                        FilesystemHelper.AddFilesystem(newS);
+                }
+            });
+
+            servicegrouplist = new List<ServiceGroup_T>();
+            systeminfo = SystemInfoHelper.GetSystemInfo();
+
             m_timer = new Timer(ConfigMgr.Config.Period);
             m_timer.Elapsed += DoPeriodicCheck;
             m_timer.AutoReset = true;
+
+            m_mMonitClient = new Collector();
+
+            var service = ServiceHelper.GetSystemService();
+            Run.system = new List<Service_T>();
+            Run.system.Add(service);
         }
 
         private void DoPeriodicCheck(object sender, ElapsedEventArgs e)
         {
-            m_serviceMonitoring.CheckServicesRunning();
-            m_mMonitClient.Push();
-        }
-
-        private void InitConfig()
-        {
-           // m_configXmlDoc = new XmlDocument();
-            
-            // load the config xml, generate if it doesn´t exist
-            string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            m_configFileName = typeof(MonitWindowsAgentConfig).Name + ".xml";
-            m_configFilePathName = Path.Combine(path, m_configFileName);
-
-            ConfigMgr.LoadConfig(m_configFilePathName);
-
+            heartbeatRunning = true;
+            Collector.HandleMmonit(null);
+            heartbeatRunning = false;
         }
 
         public void Start()
         {
+            Server.Start();
+
+            Event.Post(Run.system[0], MonitEventType.Event_Instance, MonitStateType.State_Changed,
+                Run.system[0].action_MONIT_START, "Monit started");
+
             // start the timer
             m_timer.Start();
 
             DoPeriodicCheck(m_timer, null);
+
+            Update();
         }
 
-
-        public SerializedInfo GetStatusXmlData()
+        private void Update()
         {
-            var data = new monit();
-            data.id = UniqueWindowsId.GetOrCreateUniqueId();
-            data.incarnation = SystemStats.ProcessRunningInSec();
-            data.server = MonitStatusGenericData.GetMonitServerData();
-            data.platform = MonitStatusGenericData.GetMonitPlatformData();
-            data.version = "5.6"; // TODO, decide how to use the correct version number here in the future
-
-            var services = new List<monitService>();
-            services.AddRange(GetFilesystemServices()); // TODO, should depend on config / controlfile
-            services.Add(GetSystemService()); // TODO, should depend on config / controlfile
-            // data.service.Add(GetHostService()); // TODO, depends on config / controlfile..
-
-            data.services = services.ToArray();
-
-            var status = SerializeMgr.Serialize(data);
-            return status;
-        }
-
-        private monitService GetHostService()
-        {
-            // TODO
-            return null;
-        }
-
-        private monitService GetSystemService()
-        {
-            var systemService = GetNewServiceSkeleton(MonitServiceType.TYPE_SYSTEM);
-            systemService.system = new monitServiceSystem();
-
-            systemService.name = SystemStats.GetHostname();
-            
-            // CPU
-            systemService.system.cpu = new monitServiceSystemCpu
+            while (true)
             {
-                system = SystemStats.GetCPULoadPercentage(),
-                user = 0,
-            };
+                if (!heartbeatRunning)
+                    Validate.validate();
 
-            // MEMORY
-            var totalMem = PerformanceInfo.GetTotalMemoryInKiB();
-            systemService.system.memory = new monitServiceSystemMemory()
-            {
-                kilobyte = totalMem,
-                // calculating free mem, then substracting this from 100 to get used mem percentage
-                percent = Math.Round(100 - ((decimal)PerformanceInfo.GetPhysicalAvailableMemoryInKiB() / (decimal)totalMem) * 100, 1),
-            };
+                if (!Run.doaction)
+                    Thread.Sleep(Run.polltime);
 
-            // LOAD
-            systemService.system.load = new monitServiceSystemLoad()
-            {
-                avg01 = 0.07,
-                avg05 = 0.03,
-                avg15 = 0.08,
-            };
-
-            // SWAP
-            // Possible to use this on windows?
-            systemService.system.swap = new monitServiceSystemSwap()
-            {
-                kilobyte = 0,
-                percent = 0,
-            };
-
-            return systemService;
-        }
-
-        private List<monitService> GetFilesystemServices()
-        {
-            var fileSystemServices = new List<monitService>();
-
-            // ADD ALL DRIVES AUTOMATICALLY
-            foreach (DriveInfo drive in DriveInfo.GetDrives())
-            {
-                if (drive.IsReady && drive.DriveType == DriveType.Fixed)
-                {
-                    var fsService = GetNewServiceSkeleton(MonitServiceType.TYPE_FILESYSTEM);
-                    fsService.name = drive.VolumeLabel + " (" + drive.DriveFormat.ToUpper() +  ")";
-
-                    fsService.block = new monitServiceBlock()
-                    {
-                        total = drive.TotalFreeSpace,
-                        usage = drive.TotalFreeSpace - drive.AvailableFreeSpace,
-                        percent = (drive.TotalFreeSpace == 0) ? 100 : ((drive.AvailableFreeSpace/drive.TotalFreeSpace)*100),
-                    };
-
-                    fileSystemServices.Add(fsService);
-                }
+                //if(Run.stopped)
+                //    do_exit();
+                //else if(Run.doreload)
+                //    do_reinit();
             }
-
-            return fileSystemServices;
         }
 
-        /// <summary>
-        /// Get "frame"-xml-data which is the same for different usecases
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private monitService GetNewServiceSkeleton(MonitServiceType type)
+        internal void Shutdown()
         {
-            var serviceSekeleton = new monitService();
-            serviceSekeleton.name = SystemStats.GetHostname();
+            Stop();
+        }
 
-            serviceSekeleton.type = (int)type;
-            serviceSekeleton.status = 0; // "error". Error flags bitmap, See MonitEventTable
-            serviceSekeleton.status_hint = 0; // "error_hint" See MonitEventTable
-            serviceSekeleton.monitor = (int)MonitMonitorStateType.MONITOR_YES;
-            serviceSekeleton.monitormode = (int)MonitMonitorModeType.MODE_ACTIVE; // default
+        internal void Pause()
+        {
+            Stop();
+        }
 
-            var tf = Timing.GetTimingFraction();
-            serviceSekeleton.collected_sec = tf.Timestamp;
-            serviceSekeleton.collected_usec = tf.Usec;
-
-            return serviceSekeleton;
+        internal void Stop()
+        {
+            Server.Stop();
         }
     }
 }

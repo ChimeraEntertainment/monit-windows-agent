@@ -75,10 +75,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Logging">
-      <HintPath>..\packages\Common.Logging.2.0.0\lib\2.0\Common.Logging.dll</HintPath>
+      <HintPath>..\packages\Common.Logging.3.1.0\lib\net35\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core">
+      <HintPath>..\packages\Common.Logging.Core.3.1.0\lib\net35\Common.Logging.Core.dll</HintPath>
     </Reference>
     <Reference Include="NHttp">
-      <HintPath>..\packages\NHttp.0.1.6.0\lib\net20\NHttp.dll</HintPath>
+      <HintPath>..\packages\NHttp.0.1.7.0\lib\net20\NHttp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
@@ -97,55 +100,93 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\ConfigMgr.cs" />
+    <Compile Include="Control.cs" />
+    <Compile Include="Event.cs" />
+    <Compile Include="Alert.cs" />
+    <Compile Include="Configuration\ConfigMgr.cs" />
     <Compile Include="Helpers\CPUAchitecture.cs" />
+    <Compile Include="Helpers\FilesystemHelper.cs" />
     <Compile Include="Helpers\Logger.cs" />
+    <Compile Include="Helpers\OutputBuilder.cs" />
+    <Compile Include="Helpers\ProcessHelper.cs" />
+    <Compile Include="Helpers\ServiceHelper.cs" />
+    <Compile Include="Helpers\SystemInfoHelper.cs" />
     <Compile Include="Helpers\UACHelper.cs" />
-    <Compile Include="MonitData\XML\monitPlatform.cs" />
-    <Compile Include="MonitData\XML\monitServer.cs" />
-    <Compile Include="MonitData\XML\monitServerCredentials.cs" />
-    <Compile Include="MonitData\XML\monitServerHttpd.cs" />
-    <Compile Include="MonitData\XML\monitService.cs" />
-    <Compile Include="MonitData\XML\monitServiceBlock.cs" />
-    <Compile Include="MonitData\XML\monitServiceInode.cs" />
-    <Compile Include="MonitData\XML\monitServicePort.cs" />
-    <Compile Include="MonitData\XML\monitServiceSystem.cs" />
-    <Compile Include="MonitData\XML\monitServiceSystemCpu.cs" />
-    <Compile Include="MonitData\XML\monitServiceSystemLoad.cs" />
-    <Compile Include="MonitData\XML\monitServiceSystemMemory.cs" />
-    <Compile Include="MonitData\XML\monitServiceSystemSwap.cs" />
-    <Compile Include="MonitData\XML\MonitStatusGenericData.cs" />
+    <Compile Include="Http\Processor.cs" />
+    <Compile Include="Http\Server.cs" />
+    <Compile Include="Monit.cs" />
+    <Compile Include="MonitData\Enums.cs" />
+    <Compile Include="Http\HttpStatusCodes.cs" />
+    <Compile Include="Http\MonitURLCommands.cs" />
+    <Compile Include="MonitData\DataStructures.cs" />
     <Compile Include="MonitData\MonitEventTable.cs" />
-    <Compile Include="MonitData\MonitMonitorModeType.cs" />
-    <Compile Include="MonitData\MonitMonitorStateType.cs" />
-    <Compile Include="MonitData\MonitProcessStatusType.cs" />
-    <Compile Include="MonitData\MonitProtocolType.cs" />
-    <Compile Include="MonitData\MonitResourceIdType.cs" />
-    <Compile Include="MonitLogic\MonitServer.cs" />
-    <Compile Include="MonitLogic\MonitServiceType.cs" />
-    <Compile Include="MonitData\XML\monit.cs" />
-    <Compile Include="MonitLogic\MMonitClient.cs" />
+    <Compile Include="Http\Cervlet.cs" />
+    <Compile Include="Collector.cs" />
     <Compile Include="MonitWindowsAgent.cs" />
-    <Compile Include="MonitWindowsAgentConfig.cs" />
+    <Compile Include="Configuration\MonitWindowsAgentConfig.cs" />
     <Compile Include="Helpers\PerformanceInfo.cs" />
     <Compile Include="Helpers\SerializeMgr.cs" />
-    <Compile Include="Service.cs">
+    <Compile Include="MonitWindowsAgentService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Service.Designer.cs">
-      <DependentUpon>Service.cs</DependentUpon>
+    <Compile Include="MonitWindowsAgentService.Designer.cs">
+      <DependentUpon>MonitWindowsAgentService.cs</DependentUpon>
     </Compile>
+    <Compile Include="Process.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Monitoring\ServiceMonitoring.cs" />
     <Compile Include="Helpers\SystemStats.cs" />
     <Compile Include="Helpers\Timing.cs" />
     <Compile Include="Helpers\UniqueWindowsId.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Sendmail.cs" />
+    <Compile Include="Spawn.cs" />
+    <Compile Include="Util.cs" />
+    <Compile Include="Validate.cs" />
+    <Compile Include="Xml.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HeaderFooter.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\About.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Runtime.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Service.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HeaderFooter.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Service.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Event.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ServiceGroup.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Home.html" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

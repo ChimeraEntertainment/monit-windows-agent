@@ -1,0 +1,11 @@
+<event>
+	<collected_sec>{COLLECTED_SEC}</collected_sec>
+	<collected_usec>{COLLECTED_USEC}</collected_usec>
+	<service>{SOURCE_NAME}</service>
+	<type>{SOURCE_TYPE}</type>
+	<id>{EVENT_ID}</id>
+	<state>{EVENT_STATE}</state>
+	<action>{EVENT_DOACTION}</action>
+	<message><![CDATA[{CDATA}]]></message>
+	{TOKEN}
+</event>

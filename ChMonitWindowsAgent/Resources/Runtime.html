@@ -1,0 +1,29 @@
+<h2>Monit runtime status</h2>
+<table id='status-table'>
+    <tr>
+        <th width='40%%'>Parameter</th>
+        <th width='60%%'>Value</th>
+    </tr>
+    <tr><td>Monit ID</td><td>{MONIT_ID}</td></tr>
+    <tr><td>Host</td><td>{HOST_NAME}</td></tr>
+    <tr><td>Process id</td><td>{PROCESS_ID}</td></tr>
+    <tr>
+        <td>Effective user running Monit</td>
+        <td>{USER}</td>
+    </tr>
+    <tr><td>Controlfile</td><td>{CONTROL_FILE}</td></tr>
+    {LOG_FILE}
+    <tr><td>Pidfile</td><td>{PID_FILE}</td></tr>
+    <tr><td>State file</td><td>{STATE_FILE}]</td></tr>
+    <tr><td>Debug</td><td>{DEBUG_FLAG}</td></tr>
+    <tr><td>Log</td><td>{LOG_FLAG}</td></tr>
+    <tr><td>Use syslog</td><td>{SYSLOG_FLAG}</td></tr>
+    {EVENTLIST_DIR}
+    {MMONIT_SERVER}
+    {MAIL_SERVER}
+    {MAIL_FORMAT}
+    <tr><td>Poll time</td><td>{POLLTIME} seconds with start delay {STARTDELAY} seconds</td></tr>
+    {HTTPD}
+    {ALERTS}
+</table>
+{BUTTONS}

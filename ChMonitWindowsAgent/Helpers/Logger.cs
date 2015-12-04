@@ -1,16 +1,16 @@
-﻿using System;
-using Common.Logging;
+﻿using Common.Logging;
 
 namespace ChMonitoring.Helpers
 {
     class Logger
     {
-        internal static ILog Log { get; private set; }
-
-        internal static void Init()
-        {
-            Log = LogManager.GetCurrentClassLogger();
+        private static ILog _log = null;
+        internal static ILog Log {
+            get {
+                if(_log == null)
+                    _log = LogManager.GetLogger<MonitWindowsAgent>();
+                return _log;
+            }
         }
-
     }
 }

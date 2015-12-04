@@ -1,0 +1,11 @@
+{HEAD}
+	<collected_sec>{COLLECTED_SEC}</collected_sec>
+	<collected_usec>{COLLECTED_USEC}</collected_usec>
+	<status>{ERROR}</status>
+	<status_hint>{HINT}</status_hint>
+	<monitor>{MONITOR}</monitor>
+	<monitormode>{MODE}</monitormode>
+	<pendingaction>{DOACTION}</pendingaction>
+	{EVERY}
+	{CENTER}
+</service>

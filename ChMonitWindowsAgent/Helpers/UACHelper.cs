@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using Microsoft.Win32;
@@ -88,7 +87,7 @@ namespace ChMonitoring.Helpers
                 if (IsUacEnabled)
                 {
                     IntPtr tokenHandle = IntPtr.Zero;
-                    if (!OpenProcessToken(Process.GetCurrentProcess().Handle, TOKEN_READ, out tokenHandle))
+                    if (!OpenProcessToken(System.Diagnostics.Process.GetCurrentProcess().Handle, TOKEN_READ, out tokenHandle))
                     {
                         throw new ApplicationException("Could not get process token.  Win32 Error Code: " +
                                                        Marshal.GetLastWin32Error());

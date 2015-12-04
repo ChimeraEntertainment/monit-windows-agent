@@ -1,0 +1,31 @@
+<h2>{SERVICE_TYPE} status</h2>
+<table id='status-table'>
+    <tr>
+        <th width='30%%'>Parameter</th>
+        <th width='70%%'>Value</th>
+    </tr>
+    <tr>
+        <td>Name</td>
+        <td>{SERVICE_NAME}</td>
+    </tr>
+    {SERVICE_TYPE_DESCR}
+    <tr>
+        <td>Status</td>
+        <td>
+            {SERVICE_STATUS}
+        </td>
+    </tr>
+    {SERVICE_GROUP}
+    <tr><td>Monitoring mode</td><td>{MONITORING_MODE}</td></tr>
+    <tr><td>Monitoring status</td><td>{MONITORING_STATUS}</td></tr>
+    {DEPENDANTS}
+    {SERVICE_START}
+    {SERVICE_STOP}
+    {SERVICE_RESTART}
+    {CHECKING_CYCLE}
+    {SERVICE_DATA}
+    <tr><td>Data collected</td><td>{COLLECTION_TIME}</td></tr>
+    {SERVICE_RULES}
+    {ALERTS}
+</table>
+{BUTTONS}

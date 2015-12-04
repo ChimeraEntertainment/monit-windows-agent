@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+{HEAD}
+		<uptime>{PROCESS_UPTIME}</uptime>
+		<poll>{POLLTIME}</poll>
+		<startdelay>{STARTDELAY}</startdelay>
+		<localhostname>{HOST_NAME}</localhostname>
+		<controlfile>{CONTROL_FILE}</controlfile>
+		{HTTPD}
+	</server>
+	<platform>
+		<name>{SYSTEM_NAME}</name>
+		<release>{SYSTEM_RELEASE}</release>
+		<version>{SYSTEM_VERSION}</version>
+		<machine>{SYSTEM_MACHINE}</machine>
+		<cpu>{SYSTEM_CPUS}</cpu>
+    <memory>{SYSTEM_MEM}</memory>
+		<swap>{SYSTEM_SWAP}</swap>
+	</platform>
+	{CENTER}
+</monit>

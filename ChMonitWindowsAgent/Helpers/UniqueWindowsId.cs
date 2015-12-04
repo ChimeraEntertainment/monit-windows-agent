@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Management;
-using Microsoft.Win32;
-using System.Text;
-using System.Security.Cryptography;
 using System.IO;
+using System.Management;
+using System.Security.Cryptography;
+using System.Text;
+using Microsoft.Win32;
 
 namespace ChMonitoring.Helpers
 {
@@ -15,7 +15,8 @@ namespace ChMonitoring.Helpers
         /// <returns></returns>
         public static string GetOrCreateUniqueId()
         {
-            string monitIdFilePathName = Path.Combine(Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%"), ".monit.id");
+            var path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string monitIdFilePathName = Path.Combine(path, ".monit.id");
             string idValue;
 
             if (!File.Exists(monitIdFilePathName))

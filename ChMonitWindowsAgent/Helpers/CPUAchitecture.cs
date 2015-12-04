@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace ChMonitoring.Helpers
@@ -54,7 +53,7 @@ namespace ChMonitoring.Helpers
             }
 
             bool isWow64;
-            bool retVal = fnDelegate.Invoke(Process.GetCurrentProcess().Handle, out isWow64);
+            bool retVal = fnDelegate.Invoke(System.Diagnostics.Process.GetCurrentProcess().Handle, out isWow64);
 
             if (retVal == false)
             {

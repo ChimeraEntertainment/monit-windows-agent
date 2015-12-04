@@ -48,7 +48,7 @@ namespace ChMonitoring.Helpers
             var pi = new PerformanceInformation();
             if (GetPerformanceInfo(out pi, Marshal.SizeOf(pi)))
             {
-                return Convert.ToUInt32((pi.PhysicalTotal.ToInt64()*pi.PageSize.ToInt64()/1024));
+                return Convert.ToUInt32((pi.PhysicalTotal.ToInt64() * pi.PageSize.ToInt64() / 1024));
             }
             else
             {
