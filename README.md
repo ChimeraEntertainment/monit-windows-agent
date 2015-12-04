@@ -2,6 +2,10 @@
 
 
 # Current Project Status
+
+**As of Dec the 4th 2015 I have pushed an update which is basically a rewrite of the C++ monit source code in C#. Extended functionality is given, we're using it in production since 2 months. The documentation below is outdated and will be updated soon!**
+
+
 (We need your help, see <a href="#please-contribute">Please contribute</a>.)
 
 ## What already works
