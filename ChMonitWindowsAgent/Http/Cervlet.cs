@@ -417,43 +417,47 @@ namespace ChMonitoring.Http
                 //}
                 if ((doaction = Util.GetAction(action)) == MonitActionType.Action_Ignored)
                 {
-                    Processor.SendError(res, HttpStatusCode.SC_BAD_REQUEST, "Invalid action \"%s\"", action);
+                    Processor.SendError(res, HttpStatusCode.SC_BAD_REQUEST, "Invalid action \"{0}\"", action);
                     return;
                 }
-                var service = Processor.GetParameter(req, "service");
-                if (!string.IsNullOrEmpty(service))
+
+                string[] serviceParams = Processor.GetParameter(req, "service").Split(',');
+                foreach (var param in serviceParams)
                 {
-                    s = Util.GetService(service);
-                    if (s == null)
+                    if (!string.IsNullOrEmpty(param))
                     {
-                        Processor.SendError(res, HttpStatusCode.SC_BAD_REQUEST, "There is no service named \"{0}\"",
-                            service);
-                        return;
+                        s = Util.GetService(param);
+                        if (s == null)
+                        {
+                            Processor.SendError(res, HttpStatusCode.SC_BAD_REQUEST, "There is no service named \"{0}\"",
+                                param);
+                            return;
+                        }
+                        if (s.doaction != MonitActionType.Action_Ignored)
+                        {
+                            Processor.SendError(res, HttpStatusCode.SC_SERVICE_UNAVAILABLE,
+                                "Other action already in progress -- please try again later");
+                            return;
+                        }
+                        s.doaction = doaction;
+                        Logger.Log.InfoFormat("'{0}' {1} on user request", s.name, action);
                     }
-                    if (s.doaction != MonitActionType.Action_Ignored)
-                    {
-                        Processor.SendError(res, HttpStatusCode.SC_SERVICE_UNAVAILABLE,
-                            "Other action already in progress -- please try again later");
-                        return;
-                    }
-                    s.doaction = doaction;
-                    Logger.Log.InfoFormat("'{0}' {1} on user request", s.name, action);
                 }
-            }
-            /* Set token for last service only so we'll get it back after all services were handled */
-            if (!string.IsNullOrEmpty(token))
-            {
-                Service_T q = null;
-                foreach (var ser in MonitWindowsAgent.servicelist)
-                    if (ser.doaction == doaction)
-                        q = ser;
-                if (q != null)
+                /* Set token for last service only so we'll get it back after all services were handled */
+                if (!string.IsNullOrEmpty(token))
                 {
-                    q.token = token;
+                    Service_T q = null;
+                    foreach (var ser in MonitWindowsAgent.servicelist)
+                        if (ser.doaction == doaction)
+                            q = ser;
+                    if (q != null)
+                    {
+                        q.token = token;
+                    }
                 }
+                MonitWindowsAgent.Run.doaction = true;
+                //do_wakeupcall();
             }
-            MonitWindowsAgent.Run.doaction = true;
-            //do_wakeupcall();
         }
 
         private void handleRun(HttpRequest req, HttpResponse res)
@@ -666,7 +670,7 @@ namespace ChMonitoring.Http
             }
         }
 
-        private static string printAction(string title, Action s)
+        private static string printAction(string title, Func<bool> s)
         {
             var result = new StringBuilder();
             if (s != null)

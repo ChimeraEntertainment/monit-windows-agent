@@ -376,7 +376,7 @@ namespace ChMonitoring.Helpers
         }
 
         public static EventAction_T GetEventAction(MonitActionType failed, MonitActionType succeeded,
-            Action command1 = null, Action command2 = null)
+            Func<bool> command1 = null, Func<bool> command2 = null)
         {
             var ea = new EventAction_T();
 

@@ -72,8 +72,10 @@ namespace ChMonitoring.Http
             if (credentialValues.Length < 2)
                 return false;
 
-            return (credentialValues[0].Equals(MonitWindowsAgent.Run.httpd.credentials[0].uname) &&
-                    credentialValues[1].Equals(MonitWindowsAgent.Run.httpd.credentials[0].passwd));
+            bool unameMatch = credentialValues[0] == MonitWindowsAgent.Run.httpd.credentials[0].uname;
+            bool passwdMatch = credentialValues[1] == MonitWindowsAgent.Run.httpd.credentials[0].passwd;
+
+            return (unameMatch && passwdMatch);
         }
 
         public static string EscapeHTML(string s)
@@ -122,11 +124,15 @@ namespace ChMonitoring.Http
             res.StatusDescription = HttpStatusCodes.GetStatusString(code);
         }
 
+        /// <summary>
+        /// Gets the parameter specified by the given name
+        /// </summary>
+        /// <param name="req">The HttpRequest</param>
+        /// <param name="name">The parameter key name</param>
+        /// <returns>A possibly comma seperated parameter, if several values where assigned to one key</returns>
         public static string GetParameter(HttpRequest req, string name)
         {
-            if (req.Params.AllKeys.Contains(name))
-                return req.Params[name];
-            return "";
+            return req.Params[name];
         }
 
         public static string GetServer()

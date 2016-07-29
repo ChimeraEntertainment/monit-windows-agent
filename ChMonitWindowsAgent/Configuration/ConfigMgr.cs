@@ -19,6 +19,12 @@ namespace ChMonitoring.Configuration
             }
         }
 
+        public static void ReloadConfig()
+        {
+            _config = null;
+            LoadConfig();
+        }
+
         private static void LoadConfig()
         {
             // load the config xml, generate if it doesn´t exist

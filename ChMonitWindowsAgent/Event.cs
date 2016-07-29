@@ -449,7 +449,7 @@ namespace ChMonitoring
                 return;
 
             /* Alert and mmonit event notification are common actions */
-            E.flag |= Collector.HandleMmonit(E);
+            E.flag |= MMonit.HandleMmonit(E);
             E.flag |= Alert.HandleAlert(E);
 
             /* In the case that some subhandler failed, enqueue the event for

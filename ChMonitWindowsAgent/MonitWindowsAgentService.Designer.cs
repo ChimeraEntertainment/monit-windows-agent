@@ -28,8 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.ServiceName = "Service1";
+            // 
+            // MonitWindowsAgentService
+            // 
+            this.CanHandlePowerEvent = false;
+            this.CanHandleSessionChangeEvent = false;
+            this.CanPauseAndContinue = false;
+            this.CanShutdown = true;
+            this.CanStop = true;
+            this.ServiceName = "MonitWindowsAgent";
+
         }
 
         #endregion

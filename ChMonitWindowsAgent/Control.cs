@@ -1,6 +1,6 @@
-﻿using System;
-using ChMonitoring.Helpers;
+﻿using ChMonitoring.Helpers;
 using ChMonitoring.MonitData;
+using System.Collections.Generic;
 
 namespace ChMonitoring
 {
@@ -17,15 +17,21 @@ namespace ChMonitoring
         /// <param name="S">A service name as stated in the config file</param>
         /// <param name="A">A string describing the action to execute</param>
         /// <returns>false for error, otherwise true</returns>
-        public static bool ControlServiceString(string S, string A)
+        public static int ControlServiceString(List<string> services, string action)
         {
             MonitActionType a;
-            if ((a = Util.GetAction(A)) == MonitActionType.Action_Ignored)
+            if ((a = Util.GetAction(action)) == MonitActionType.Action_Ignored)
             {
-                Logger.Log.ErrorFormat("Service '{0}' -- invalid action {1}", S, A);
-                return false;
+                Logger.Log.ErrorFormat("invalid action {0}", action);
+                return 1;
             }
-            return ControlService(S, a);
+            int errors = 0;
+            foreach (var s in services)
+            {
+                if (ControlService(s, a) == false)
+                    errors++;
+            }
+            return errors;
         }
 
 
@@ -142,16 +148,15 @@ namespace ChMonitoring
                     Logger.Log.InfoFormat("'{0}' start", s.name);
                     if (s.type == MonitServiceType.Service_Process)
                     {
-                        try
+                        if (s.start())
                         {
-                            s.start();
                             Event.Post(s, MonitEventType.Event_Exec, MonitStateType.State_Succeeded, s.action_EXEC,
                                 "started");
                         }
-                        catch (Exception e)
+                        else
                         {
                             Event.Post(s, MonitEventType.Event_Exec, MonitStateType.State_Failed, s.action_EXEC,
-                                "failed to start -- {0}", e.Message);
+                                "failed to start");
                         }
                     }
                 }
@@ -185,17 +190,16 @@ namespace ChMonitoring
                     var pid = Util.IsProcessRunning(s, true);
                     if (s.type == MonitServiceType.Service_Process)
                     {
-                        try
+                        if (s.stop())
                         {
-                            s.stop();
                             Event.Post(s, MonitEventType.Event_Exec, MonitStateType.State_Succeeded, s.action_EXEC,
                                 "stopped");
                         }
-                        catch (Exception e)
+                        else
                         {
                             rv = false;
                             Event.Post(s, MonitEventType.Event_Exec, MonitStateType.State_Failed, s.action_EXEC,
-                                "failed to stop -- {0}", e.Message);
+                                "failed to stop");
                         }
                     }
                 }
@@ -226,16 +230,15 @@ namespace ChMonitoring
                 Util.ResetInfo(s);
                 if (s.type == MonitServiceType.Service_Process)
                 {
-                    try
+                    if (s.restart())
                     {
-                        s.restart();
                         Event.Post(s, MonitEventType.Event_Exec, MonitStateType.State_Succeeded, s.action_EXEC,
                             "restarted");
                     }
-                    catch (Exception e)
+                    else
                     {
                         Event.Post(s, MonitEventType.Event_Exec, MonitStateType.State_Failed, s.action_EXEC,
-                            "failed to restart -- {0}", e.Message);
+                            "failed to restart");
                     }
                 }
             }

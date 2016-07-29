@@ -8,7 +8,7 @@ namespace ChMonitoring.Helpers
         internal static ILog Log {
             get {
                 if(_log == null)
-                    _log = LogManager.GetLogger<MonitWindowsAgent>();
+                    _log = LogManager.GetLogger("MonitWindowsAgent");
                 return _log;
             }
         }

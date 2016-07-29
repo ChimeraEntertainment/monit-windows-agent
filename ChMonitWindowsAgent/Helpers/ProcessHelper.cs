@@ -17,8 +17,32 @@ namespace ChMonitoring.Helpers
                 {
                     foundServices.ForEach(sc =>
                     {
-                        service.start = sc.Start;
-                        service.stop = sc.Stop;
+                        service.start = () =>
+                        {
+                            try
+                            {
+                                sc.Start();
+                                sc.WaitForStatus(ServiceControllerStatus.Running, new System.TimeSpan(0, 0, 10));
+                                return true;
+                            }
+                            catch (System.Exception e)
+                            {
+                                return false;
+                            }
+                        };
+                        service.stop = () =>
+                        {
+                            try
+                            {
+                                sc.Stop();
+                                sc.WaitForStatus(ServiceControllerStatus.Stopped, new System.TimeSpan(0, 0, 10));
+                                return true;
+                            }
+                            catch (System.Exception e)
+                            {
+                                return false;
+                            }
+                        };
                         AddService(service);
                     });
                 }
