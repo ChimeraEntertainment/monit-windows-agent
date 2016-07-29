@@ -181,6 +181,26 @@ namespace ChMonitoring.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot;?&gt;
+        ///&lt;MonitWindowsAgentConfig xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+        ///  &lt;Period&gt;10&lt;/Period&gt;
+        ///  &lt;Services&gt;
+        ///    &lt;Process Name=&quot;test-service-name&quot;&gt;
+        ///      &lt;ActionRate Count=&quot;3&quot; Cycle=&quot;5&quot; ActionType=&quot;5&quot;&gt;&lt;/ActionRate&gt;
+        ///      &lt;Resources&gt;
+        ///        &lt;Resource Type=&quot;1&quot; ComparisonOperator=&quot;&gt;&quot; Limit=&quot;800&quot; ActionType=&quot;2&quot; /&gt;
+        ///      &lt;/Resources&gt;
+        ///    &lt;/Process&gt;
+        ///    &lt;Process Name=&quot;test-service-name&quot;&gt;
+        ///      &lt;ActionRate Count=&quot;3&quot; Cycle=&quot;5&quot; Acti [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string MonitWindowsAgentConfig {
+            get {
+                return ResourceManager.GetString("MonitWindowsAgentConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;h2&gt;Monit runtime status&lt;/h2&gt;
         ///&lt;table id=&apos;status-table&apos;&gt;
         ///    &lt;tr&gt;

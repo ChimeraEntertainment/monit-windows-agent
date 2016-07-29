@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<MonitWindowsAgentConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Period>10</Period>
+  <Services>
+    <Process Name="test-service-name-1">
+      <ActionRate Count="3" Cycle="5" ActionType="5"></ActionRate>
+      <Resources>
+        <Resource Type="1" ComparisonOperator=">" Limit="800" ActionType="2" />
+      </Resources>
+    </Process>
+    <Process Name="test-service-name-2">
+      <ActionRate Count="3" Cycle="5" ActionType="5"></ActionRate>
+      <Resources>
+        <Resource Type="1" ComparisonOperator=">" Limit="800" ActionType="2" />
+      </Resources>
+    </Process>
+    <Filesystem Name="test-hard-drive-name"></Filesystem>
+  </Services>
+  <FailedStarts>5</FailedStarts>
+  <MMonits>
+    <MMonit Url="http://mmonit-server:8080/collector" Username="monit" Password="monit" />
+  </MMonits>
+  <Httpd BindIp="127.0.0.1" Port="2812" Username="admin" Password="monit" SSL="false" />
+</MonitWindowsAgentConfig>
