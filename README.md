@@ -3,6 +3,10 @@
 
 # Current Project Status
 
+**As of Jul the 29th 2016 We have pushed an update which fixes a few critical bugs and includes basic command line options. Logging with log4net has now been integrated and logs into the default location. Reloading the configuration file can now be done with the standard command**
+
+---
+
 **As of Dec the 4th 2015 I have pushed an update which is basically a rewrite of the C++ monit source code in C#. Extended functionality is given, we're using it in production since 2 months. The documentation below is outdated and will be updated soon!**
 
 
@@ -12,8 +16,10 @@
 
  - Agent is **already running** on command line as well as a Windows Service
  - Agent **client is already reporting system status** like CPU, HDD, Memory usage to M/Monit
- - Agent **server is running** with implemented responses to /\_status?format=xml, /\_getid and /\_ping requests
+ - Agent **server is running** with basic functionality
  - Current configuration takes place in a proprietary XML file
+ - Agent already **alerts** when Events occur
+ - Agent responds to /_doAction requests from the M/Monit server
 
 ## Screenshots
 - M/Monit view of the windows agent:
@@ -22,14 +28,25 @@
 - Running monit windows service:
 ![monit-windows-agent Windows Service Screenshot](img/monit-windows-agent-service-1.png)
 
+## How to use
+
+### Install
+
+- Open an admin cmd
+- execute 'MonitWindowsAgent.exe --install' to install the Windows Service
+- execute 'MonitWindowsAgent.exe' without arguments to start the Service
+- to view all command line options execute 'MonitWindowsAgent.exe -h'
+
+### Uninstall
+
+- execute 'MonitWindowsAgent.exe --uninstall' to stop (if necessary) and uninstall the Windows Service
+
 ## What is still to do?
 
-- **Alerting**: Agent must be made configurable for alerts
 - Pending design decision if there should be a **monitrc parser** implemented in .NET, or if the configuration should be done *proprietary** (XML file etc)
 - **Research**
   - Which data and behaviour does M/Monit expect from its Monit clients? 
  - Specific (TODO: should be made an Issue): If the "controlfile" directive from the monitrc configuration is mandatorily needed by the M/Monit server, and if yes, what it does with it. That could limit our approach to utilize a proprietary configuration for the Windows Agent.
-- **Agent Server must respond to /_doAction and other vital web requests** and execute the according action
 - Integration of **Swap Memory** status for Windows
 - Setting up a proper community and getting some contributors (see below) ;)
 
@@ -40,7 +57,7 @@
 
 ## How does developing the Monit Windows Agent work?
 
-- Programmed in C# / .NET 3.5
+- Programmed in **C# / .NET 4.5**
 - Using Monit source code as a (documentation) basis
  - Monit Source Code is here: [https://bitbucket.org/tildeslash/monit/src](https://bitbucket.org/tildeslash/monit/src "https://bitbucket.org/tildeslash/monit/src")
 - M/Monit source code is not available
