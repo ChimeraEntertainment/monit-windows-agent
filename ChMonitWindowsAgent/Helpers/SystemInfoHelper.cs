@@ -7,6 +7,7 @@ namespace ChMonitoring.Helpers
     {
         public static SystemInfo_T GetSystemInfo()
         {
+            SystemStats systemStats = new SystemStats();
             var totalMem = PerformanceInfo.GetTotalMemoryInKiB();
             var systeminfo = new SystemInfo_T();
 
@@ -20,7 +21,7 @@ namespace ChMonitoring.Helpers
             systeminfo.collected = DateTime.UtcNow;
 
             systeminfo.cpus = SystemStats.GetCPUCoreCount();
-            systeminfo.total_cpu_syst_percent = SystemStats.GetCPULoadPercentage();
+            systeminfo.total_cpu_syst_percent = systemStats.GetCPULoadPercentage();
             systeminfo.mem_kbyte_max = SystemStats.GetMemorySizeKB();
             systeminfo.total_mem_percent =
                 Convert.ToInt16((1 - (int) (PerformanceInfo.GetPhysicalAvailableMemoryInKiB()/(float) totalMem))*10);

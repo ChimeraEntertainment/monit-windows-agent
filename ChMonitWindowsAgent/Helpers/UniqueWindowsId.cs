@@ -15,13 +15,24 @@ namespace ChMonitoring.Helpers
         /// <returns></returns>
         public static string GetOrCreateUniqueId()
         {
-            var path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            string monitIdFilePathName = Path.Combine(path, ".monit.id");
+            string monitIdFilePathName;
+            var candidatePath = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
+            if (Directory.Exists(candidatePath))
+            {
+                // This won't exist if running as System
+                monitIdFilePathName = Path.Combine(candidatePath, ".monit.id");
+            }
+            else
+            {
+                monitIdFilePathName = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), ".monit.id");
+            }
+
             string idValue;
 
             if (!File.Exists(monitIdFilePathName))
             {
-                idValue = GetUniqueWindowsIdByCPUAndHdd();
+                //idValue = GetUniqueWindowsIdByCPUAndHdd();
+                idValue = GetUniqueWindowsIdByGuid();
                 File.WriteAllText(monitIdFilePathName, idValue);
                 return idValue;
             }
@@ -31,7 +42,8 @@ namespace ChMonitoring.Helpers
             if (string.IsNullOrEmpty(idValue) || idValue.Length != 32)
             {
                 // If read ID was invalid, create a new one...
-                idValue = GetUniqueWindowsIdByCPUAndHdd();
+                //idValue = GetUniqueWindowsIdByCPUAndHdd();
+                idValue = GetUniqueWindowsIdByGuid();
                 File.WriteAllText(monitIdFilePathName, idValue);
             }
 
@@ -62,7 +74,8 @@ namespace ChMonitoring.Helpers
                 var idValueObj = idSubKey.GetValue(idValueName);
                 if (idValueObj == null)
                 {
-                    idValue = MD5(GetUniqueWindowsIdByCPUAndHdd()); // was before: Guid.NewGuid().ToString();
+                    //idValue = MD5(GetUniqueWindowsIdByCPUAndHdd());
+                    idValue = MD5(GetUniqueWindowsIdByGuid()); // was before: Guid.NewGuid().ToString();
                     idSubKey.SetValue(idValueName, idValue);
                 }
                 else
@@ -101,6 +114,11 @@ namespace ChMonitoring.Helpers
             string volumeSerial = dsk["VolumeSerialNumber"].ToString();
 
             return MD5(cpuInfo + volumeSerial);
+        }
+
+        private static string GetUniqueWindowsIdByGuid()
+        {
+            return MD5(Guid.NewGuid().ToString());
         }
     }
 }

@@ -46,7 +46,7 @@ namespace ChMonitoring.Helpers
 
             MonitWindowsAgent.servicelist = new List<Service_T>();
             MonitWindowsAgent.servicelist_conf = new List<Service_T>();
-            ConfigMgr.Config.Services.ForEach(sc =>
+            foreach(var sc in ConfigMgr.Config.Services)
             {
                 var newS = ServiceHelper.CreateService(sc, sc.Name.ToLower());
 
@@ -59,7 +59,7 @@ namespace ChMonitoring.Helpers
                     else if (sc is FilesystemConfig)
                         FilesystemHelper.AddFilesystem(newS);
                 }
-            });
+            }
 
             MonitWindowsAgent.servicegrouplist = new List<ServiceGroup_T>();
             MonitWindowsAgent.systeminfo = SystemInfoHelper.GetSystemInfo();

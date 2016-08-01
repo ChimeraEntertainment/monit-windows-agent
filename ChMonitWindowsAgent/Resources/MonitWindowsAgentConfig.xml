@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <MonitWindowsAgentConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Period>10</Period>
+  <DisplayName>{COMPUTER_NAME}</DisplayName>
   <Services>
     <Process Name="test-service-name-1">
       <ActionRate Count="3" Cycle="5" ActionType="5"></ActionRate>

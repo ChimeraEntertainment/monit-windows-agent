@@ -20,6 +20,7 @@
  - Current configuration takes place in a proprietary XML file
  - Agent already **alerts** when Events occur
  - Agent responds to /_doAction requests from the M/Monit server
+ - Services can be configured in child configs: *.Service.xml
 
 ## Screenshots
 - M/Monit view of the windows agent:

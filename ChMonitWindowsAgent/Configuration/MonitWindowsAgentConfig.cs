@@ -107,6 +107,8 @@ namespace ChMonitoring.Configuration
 
         [XmlElement] public int FailedStarts;
 
+        [XmlElement] public string DisplayName;
+
         [XmlElement] public Httpd Httpd;
 
         [XmlArray("Mailservers")] [XmlArrayItem("Mailserver", typeof (Mailserver))] public List<Mailserver> Mailservers;

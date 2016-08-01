@@ -1,11 +1,40 @@
-﻿using System;
+﻿using ChMonitoring.Configuration;
+using System;
+using System.Diagnostics;
 using System.Management;
 
-namespace ChMonitoring.Helpers {
-    internal class SystemStats {
+namespace ChMonitoring.Helpers
+{
+    internal class SystemStats : IDisposable
+    {
+        private PerformanceCounter cpuCounter = new PerformanceCounter();
 
-        internal static string GetHostname() {
-            return Environment.MachineName.ToLower();
+        public void Dispose()
+        {
+            if (cpuCounter != null)
+            {
+                cpuCounter.Dispose();
+            }
+        }
+
+        internal SystemStats()
+        {
+            cpuCounter.CategoryName = "Processor";
+            cpuCounter.CounterName = "% Processor Time";
+            cpuCounter.InstanceName = "_Total";
+
+            cpuCounter.NextValue();
+        }
+
+        internal static string GetHostname()
+        {
+            //return Environment.MachineName.ToLower();
+            if (ConfigMgr.Config.DisplayName == null)
+            {
+                return Environment.MachineName.ToLower();
+            }
+
+            return ConfigMgr.Config.DisplayName.Replace("{COMPUTER_NAME}", Environment.MachineName.ToLower());
         }
 
         internal static string GetVersion() {
@@ -34,15 +63,19 @@ namespace ChMonitoring.Helpers {
             return coreCount;
         }
 
-        internal static short GetCPULoadPercentage() {
-            byte coreCount = 0;
-            foreach(var item in new ManagementObjectSearcher("Select * from Win32_Processor").Get()) {
-                var lp = item["LoadPercentage"];
-                if(lp == null)
-                    continue;
-                coreCount += byte.Parse(item["LoadPercentage"].ToString());
-            }
-            return coreCount;
+        internal short GetCPULoadPercentage()
+        {
+            //byte coreCount = 0;
+            //foreach (var item in new ManagementObjectSearcher("Select * from Win32_Processor").Get())
+            //{
+            //    var lp = item["LoadPercentage"];
+            //    if (lp == null)
+            //        continue;
+            //    coreCount += byte.Parse(item["LoadPercentage"].ToString());
+            //}
+            //return coreCount;
+
+            return Convert.ToInt16(cpuCounter.NextValue());
 
             //private PerformanceCounter theCPUCounter = 
             // private PerformanceCounter theMemCounter = new PerformanceCounter("Memory", "Available MBytes");

@@ -24,7 +24,7 @@ namespace ChMonitoring.Configuration
             _config = LoadConfig();
         }
 
-        private static MonitWindowsAgentConfig LoadConfig()
+        private static MonitWindowsAgentConfig LoadConfig(string serviceConfigFileNameMasks = "*.Service.xml")
         {
             // load the config xml, generate if it doesn´t exist
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -45,9 +45,27 @@ namespace ChMonitoring.Configuration
                 config = ser.Deserialize(str) as MonitWindowsAgentConfig;
             }
 
+            if (!string.IsNullOrEmpty(serviceConfigFileNameMasks))
+            {
+                var serviceConfigFilePathNames = Directory.GetFiles(path, serviceConfigFileNameMasks);
+                foreach (var serviceConfigFilePathName in serviceConfigFilePathNames)
+                {
+                    using (var str = new FileStream(serviceConfigFilePathName, FileMode.Open, FileAccess.Read))
+                    {
+                        var serviceConfig = ser.Deserialize(str) as MonitWindowsAgentConfig;
+                        foreach (var service in serviceConfig.Services)
+                        {
+                            Config.Services.Add(service);
+                        }
+                    }
+                }
+            }
+
             // set period to ms
             if (config.Period < 1000)
+            {
                 config.Period *= 1000;
+            }
 
             return config;
         }

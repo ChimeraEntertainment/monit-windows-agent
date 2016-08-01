@@ -175,3 +175,5 @@ FakesAssemblies/
 
 docs_internal/
 Binary/
+
+.nuget

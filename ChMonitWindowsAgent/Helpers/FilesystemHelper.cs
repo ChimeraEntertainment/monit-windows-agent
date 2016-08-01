@@ -28,9 +28,9 @@ namespace ChMonitoring.Helpers
                         {
                             f_blocks = sc.TotalSize,
                             f_blocksfreetotal = sc.TotalFreeSpace,
-                            space_total = sc.TotalSize - sc.TotalFreeSpace,
-                            space_percent =
-                                Convert.ToInt16((sc.TotalSize == 0) ? 10 : ((sc.TotalFreeSpace/sc.TotalSize)*10))
+                            space_total = sc.TotalSize,
+                            space_percent = Convert.ToInt16((sc.TotalSize == 0) ? 10 : ((sc.TotalFreeSpace/sc.TotalSize)*10))
+                                
                         };
                         AddService(service);
                     });
