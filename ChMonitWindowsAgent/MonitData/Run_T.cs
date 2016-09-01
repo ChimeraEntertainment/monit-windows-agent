@@ -15,7 +15,7 @@ namespace ChMonitoring.MonitData
         public bool doaction; /**< true if some service(s) has action pending */
         public bool dolog; /**< true if program should log actions, otherwise false */
         public bool dommonitcredentials; /**< true if M/Monit should receive credentials */
-        public bool doprocess; /**< true if process status engine is used */
+        public bool doprocess = true; /**< true if process status engine is used */
         public /*volatile*/ bool doreload; /**< true if a monit daemon should reinitialize */
         public /*volatile*/ bool dowakeup; /**< true if a monit daemon was wake up by signal */
         public myenvironment Env;

@@ -81,7 +81,7 @@ namespace ChMonitoring.Configuration
 
         [XmlAttribute] public long LimitAbsolute;
 
-        [XmlAttribute] public short LimitPercent;
+        [XmlAttribute] public float LimitPercent;
 
         [XmlAttribute] public int Type;
     }
@@ -92,7 +92,7 @@ namespace ChMonitoring.Configuration
 
         [XmlAttribute] public string ComparisonOperator;
 
-        [XmlAttribute] public long Limit;
+        [XmlAttribute] public double Limit;
 
         [XmlAttribute] public int Type;
     }

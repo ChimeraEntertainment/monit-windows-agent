@@ -72,7 +72,7 @@ namespace ChMonitoring
             else
             {
                 foreach (var l in s.nonexistlist)
-                    Event.Post(s, MonitEventType.Event_Nonexist, MonitStateType.State_Succeeded, l, "process is running with pid %d", pid);
+                    Event.Post(s, MonitEventType.Event_Nonexist, MonitStateType.State_Succeeded, l, "process is running with pid {0}", pid);
             }
             /* Reset the exec and timeout errors if active ... the process is running (most probably after manual intervention) */
             if (Event.IsEventSet(s.error, MonitEventType.Event_Exec))
@@ -822,11 +822,11 @@ namespace ChMonitoring
                     }
                     else if (Util.EvalQExpression(r.compOperator, process.cpu_percent, r.limit))
                     {
-                        report += string.Format("cpu usage of {0}% matches resource limit [cpu usage{1}{2}%]", process.cpu_percent / 10.0, r.compOperator, r.limit / 10.0);
+                        report += string.Format("cpu usage of {0}% matches resource limit [cpu usage{1}{2}%]", process.cpu_percent, r.compOperator, r.limit / 10.0);
                         okay = false;
                     }
                     else
-                        report += string.Format("cpu usage check succeeded [current cpu usage={0}%]", process.cpu_percent / 10.0);
+                        report += string.Format("cpu usage check succeeded [current cpu usage={0}%]", process.cpu_percent);
                     break;
                 case MonitResourceType.Resource_CpuPercentTotal:
                     if (s.monitor == MonitMonitorStateType.Monitor_Init || process.total_cpu_percent < 0)
@@ -836,11 +836,11 @@ namespace ChMonitoring
                     }
                     else if (Util.EvalQExpression(r.compOperator, process.total_cpu_percent, r.limit))
                     {
-                        report += string.Format("total cpu usage of {0}% matches resource limit [cpu usage{1}{2}%]", process.total_cpu_percent / 10.0, r.compOperator, r.limit / 10.0);
+                        report += string.Format("total cpu usage of {0}% matches resource limit [cpu usage{1}{2}%]", process.total_cpu_percent, r.compOperator, r.limit / 10.0);
                         okay = false;
                     }
                     else
-                        report += string.Format("total cpu usage check succeeded [current cpu usage={0}%]", process.total_cpu_percent / 10.0);
+                        report += string.Format("total cpu usage check succeeded [current cpu usage={0}%]", process.total_cpu_percent);
                     break;
 
                 case MonitResourceType.Resource_CpuUser:
@@ -851,11 +851,11 @@ namespace ChMonitoring
                     }
                     else if (Util.EvalQExpression(r.compOperator, MonitWindowsAgent.systeminfo.total_cpu_user_percent, r.limit))
                     {
-                        report += string.Format("cpu user usage of %.1f%% matches resource limit [cpu user usage%s%.1f%%]", MonitWindowsAgent.systeminfo.total_cpu_user_percent / 10.0, r.compOperator, r.limit / 10.0);
+                        report += string.Format("cpu user usage of {0}% matches resource limit [cpu user usage{1}{2}%]", MonitWindowsAgent.systeminfo.total_cpu_user_percent, r.compOperator, r.limit / 10.0);
                         okay = false;
                     }
                     else
-                        report += string.Format("cpu user usage check succeeded [current cpu user usage=%.1f%%]", MonitWindowsAgent.systeminfo.total_cpu_user_percent / 10.0);
+                        report += string.Format("cpu user usage check succeeded [current cpu user usage={0}%]", MonitWindowsAgent.systeminfo.total_cpu_user_percent);
                     break;
 
                 case MonitResourceType.Resource_CpuSystem:
@@ -866,11 +866,11 @@ namespace ChMonitoring
                     }
                     else if (Util.EvalQExpression(r.compOperator, MonitWindowsAgent.systeminfo.total_cpu_syst_percent, r.limit))
                     {
-                        report += string.Format("cpu system usage of %.1f%% matches resource limit [cpu system usage%s%.1f%%]", MonitWindowsAgent.systeminfo.total_cpu_syst_percent / 10.0, r.compOperator, r.limit / 10.0);
+                        report += string.Format("cpu system usage of {0}% matches resource limit [cpu system usage{1}{2}%]", MonitWindowsAgent.systeminfo.total_cpu_syst_percent, r.compOperator, r.limit / 10.0);
                         okay = false;
                     }
                     else
-                        report += string.Format("cpu system usage check succeeded [current cpu system usage=%.1f%%]", MonitWindowsAgent.systeminfo.total_cpu_syst_percent / 10.0);
+                        report += string.Format("cpu system usage check succeeded [current cpu system usage={0}%]", MonitWindowsAgent.systeminfo.total_cpu_syst_percent);
                     break;
 
                 case MonitResourceType.Resource_CpuWait:
@@ -881,11 +881,11 @@ namespace ChMonitoring
                     }
                     else if (Util.EvalQExpression(r.compOperator, MonitWindowsAgent.systeminfo.total_cpu_wait_percent, r.limit))
                     {
-                        report += string.Format("cpu wait usage of %.1f%% matches resource limit [cpu wait usage%s%.1f%%]", MonitWindowsAgent.systeminfo.total_cpu_wait_percent / 10.0, r.compOperator, r.limit / 10.0);
+                        report += string.Format("cpu wait usage of {0}% matches resource limit [cpu wait usage{1}{2}%]", MonitWindowsAgent.systeminfo.total_cpu_wait_percent, r.compOperator, r.limit / 10.0);
                         okay = false;
                     }
                     else
-                        report += string.Format("cpu wait usage check succeeded [current cpu wait usage=%.1f%%]", MonitWindowsAgent.systeminfo.total_cpu_wait_percent / 10.0);
+                        report += string.Format("cpu wait usage check succeeded [current cpu wait usage={0}%]", MonitWindowsAgent.systeminfo.total_cpu_wait_percent);
                     break;
 
                 case MonitResourceType.Resource_MemoryPercent:
@@ -893,21 +893,21 @@ namespace ChMonitoring
                     {
                         if (Util.EvalQExpression(r.compOperator, MonitWindowsAgent.systeminfo.total_mem_percent, r.limit))
                         {
-                            report += string.Format("mem usage of {0}% matches resource limit [mem usage{1}{2}%]", MonitWindowsAgent.systeminfo.total_mem_percent / 10.0, r.compOperator, r.limit / 10.0);
+                            report += string.Format("mem usage of {0}% matches resource limit [mem usage{1}{2}%]", MonitWindowsAgent.systeminfo.total_mem_percent, r.compOperator, r.limit / 10.0);
                             okay = false;
                         }
                         else
-                            report += string.Format("mem usage check succeeded [current mem usage={0}%]", MonitWindowsAgent.systeminfo.total_mem_percent / 10.0);
+                            report += string.Format("mem usage check succeeded [current mem usage={0}%]", MonitWindowsAgent.systeminfo.total_mem_percent);
                     }
                     else
                     {
                         if (Util.EvalQExpression(r.compOperator, process.mem_percent, r.limit))
                         {
-                            report += string.Format("mem usage of {0}% matches resource limit [mem usage{1}{2}%]", process.mem_percent / 10.0, r.compOperator, r.limit / 10.0);
+                            report += string.Format("mem usage of {0}% matches resource limit [mem usage{1}{2}%]", process.mem_percent, r.compOperator, r.limit / 10.0);
                             okay = false;
                         }
                         else
-                            report += string.Format("mem usage check succeeded [current mem usage={0}%]", process.mem_percent / 10.0);
+                            report += string.Format("mem usage check succeeded [current mem usage={0}%]", process.mem_percent);
                     }
                     break;
 
@@ -916,21 +916,21 @@ namespace ChMonitoring
                     {
                         if (Util.EvalQExpression(r.compOperator, MonitWindowsAgent.systeminfo.total_mem_kbyte, r.limit))
                         {
-                            report += string.Format("mem amount of %s matches resource limit [mem amount%s%s]", MonitWindowsAgent.systeminfo.total_mem_kbyte * 1024f, r.compOperator, r.limit * 1024f);
+                            report += string.Format("mem amount of {0} matches resource limit [mem amount{1}{2}]", MonitWindowsAgent.systeminfo.total_mem_kbyte * 1024f, r.compOperator, r.limit * 1024f);
                             okay = false;
                         }
                         else
-                            report += string.Format("mem amount check succeeded [current mem amount=%s]", MonitWindowsAgent.systeminfo.total_mem_kbyte * 1024f);
+                            report += string.Format("mem amount check succeeded [current mem amount={0}]", MonitWindowsAgent.systeminfo.total_mem_kbyte * 1024f);
                     }
                     else
                     {
                         if (Util.EvalQExpression(r.compOperator, process.mem_kbyte, r.limit))
                         {
-                            report += string.Format("mem amount of %s matches resource limit [mem amount%s%s]", process.mem_kbyte * 1024f, r.compOperator, r.limit * 1024f);
+                            report += string.Format("mem amount of {0} matches resource limit [mem amount{1}{2}]", process.mem_kbyte * 1024f, r.compOperator, r.limit * 1024f);
                             okay = false;
                         }
                         else
-                            report += string.Format("mem amount check succeeded [current mem amount=%s]", process.mem_kbyte * 1024f);
+                            report += string.Format("mem amount check succeeded [current mem amount={0}]", process.mem_kbyte * 1024f);
                     }
                     break;
 
@@ -939,11 +939,11 @@ namespace ChMonitoring
                     {
                         if (Util.EvalQExpression(r.compOperator, MonitWindowsAgent.systeminfo.total_swap_percent, r.limit))
                         {
-                            report += string.Format("swap usage of %.1f%% matches resource limit [swap usage%s%.1f%%]", MonitWindowsAgent.systeminfo.total_swap_percent / 10.0, r.compOperator, r.limit / 10.0);
+                            report += string.Format("swap usage of {0} matches resource limit [swap usage{1}{2}%]", MonitWindowsAgent.systeminfo.total_swap_percent, r.compOperator, r.limit / 10.0);
                             okay = false;
                         }
                         else
-                            report += string.Format("swap usage check succeeded [current swap usage=%.1f%%]", MonitWindowsAgent.systeminfo.total_swap_percent / 10.0);
+                            report += string.Format("swap usage check succeeded [current swap usage={0}%]", MonitWindowsAgent.systeminfo.total_swap_percent);
                     }
                     break;
 
@@ -952,52 +952,52 @@ namespace ChMonitoring
                     {
                         if (Util.EvalQExpression(r.compOperator, MonitWindowsAgent.systeminfo.total_swap_kbyte, r.limit))
                         {
-                            report += string.Format("swap amount of %s matches resource limit [swap amount%s%s]", MonitWindowsAgent.systeminfo.total_swap_kbyte * 1024f, r.compOperator, r.limit * 1024f);
+                            report += string.Format("swap amount of {0} matches resource limit [swap amount{1}{2}]", MonitWindowsAgent.systeminfo.total_swap_kbyte * 1024f, r.compOperator, r.limit * 1024f);
                             okay = false;
                         }
                         else
-                            report += string.Format("swap amount check succeeded [current swap amount=%s]", MonitWindowsAgent.systeminfo.total_swap_kbyte * 1024f);
+                            report += string.Format("swap amount check succeeded [current swap amount={0}]", MonitWindowsAgent.systeminfo.total_swap_kbyte * 1024f);
                     }
                     break;
 
                 case MonitResourceType.Resource_LoadAverage1m:
                     if (Util.EvalQExpression(r.compOperator, (int)(MonitWindowsAgent.systeminfo.loadavg[0] * 10.0), r.limit))
                     {
-                        report += string.Format("loadavg(1min) of %.1f matches resource limit [loadavg(1min)%s%.1f]", MonitWindowsAgent.systeminfo.loadavg[0], r.compOperator, r.limit / 10.0);
+                        report += string.Format("loadavg(1min) of {0} matches resource limit [loadavg(1min){1}{2}]", MonitWindowsAgent.systeminfo.loadavg[0], r.compOperator, r.limit / 10.0);
                         okay = false;
                     }
                     else
-                        report += string.Format("loadavg(1min) check succeeded [current loadavg(1min)=%.1f]", MonitWindowsAgent.systeminfo.loadavg[0]);
+                        report += string.Format("loadavg(1min) check succeeded [current loadavg(1min)={0}]", MonitWindowsAgent.systeminfo.loadavg[0]);
                     break;
 
                 case MonitResourceType.Resource_LoadAverage5m:
                     if (Util.EvalQExpression(r.compOperator, (int)(MonitWindowsAgent.systeminfo.loadavg[1] * 10.0), r.limit))
                     {
-                        report += string.Format("loadavg(5min) of %.1f matches resource limit [loadavg(5min)%s%.1f]", MonitWindowsAgent.systeminfo.loadavg[1], r.compOperator, r.limit / 10.0);
+                        report += string.Format("loadavg(5min) of {0} matches resource limit [loadavg(5min){1}{2}]", MonitWindowsAgent.systeminfo.loadavg[1], r.compOperator, r.limit / 10.0);
                         okay = false;
                     }
                     else
-                        report += string.Format("loadavg(5min) check succeeded [current loadavg(5min)=%.1f]", MonitWindowsAgent.systeminfo.loadavg[1]);
+                        report += string.Format("loadavg(5min) check succeeded [current loadavg(5min)={0}]", MonitWindowsAgent.systeminfo.loadavg[1]);
                     break;
 
                 case MonitResourceType.Resource_LoadAverage15m:
                     if (Util.EvalQExpression(r.compOperator, (int)(MonitWindowsAgent.systeminfo.loadavg[2] * 10.0), r.limit))
                     {
-                        report += string.Format("loadavg(15min) of %.1f matches resource limit [loadavg(15min)%s%.1f]", MonitWindowsAgent.systeminfo.loadavg[2], r.compOperator, r.limit / 10.0);
+                        report += string.Format("loadavg(15min) of {0} matches resource limit [loadavg(15min){1}{2}]", MonitWindowsAgent.systeminfo.loadavg[2], r.compOperator, r.limit / 10.0);
                         okay = false;
                     }
                     else
-                        report += string.Format("loadavg(15min) check succeeded [current loadavg(15min)=%.1f]", MonitWindowsAgent.systeminfo.loadavg[2]);
+                        report += string.Format("loadavg(15min) check succeeded [current loadavg(15min)={0}]", MonitWindowsAgent.systeminfo.loadavg[2]);
                     break;
 
                 case MonitResourceType.Resource_Children:
                     if (Util.EvalQExpression(r.compOperator, process.children, r.limit))
                     {
-                        report += string.Format("children of %i matches resource limit [children%s%ld]", process.children, r.compOperator, r.limit);
+                        report += string.Format("children of {0} matches resource limit [children{1}{2}]", process.children, r.compOperator, r.limit);
                         okay = false;
                     }
                     else
-                        report += string.Format("children check succeeded [current children=%i]", process.children);
+                        report += string.Format("children check succeeded [current children={0}]", process.children);
                     break;
 
                 case MonitResourceType.Resource_MemoryKbyteTotal:
@@ -1013,11 +1013,11 @@ namespace ChMonitoring
                 case MonitResourceType.Resource_MemoryPercentTotal:
                     if (Util.EvalQExpression(r.compOperator, process.total_mem_percent, r.limit))
                     {
-                        report += string.Format("total mem amount of {0}% matches resource limit [total mem amount{1}{2}%]", (float)process.total_mem_percent / 10.0, r.compOperator, (float)r.limit / 10.0);
+                        report += string.Format("total mem amount of {0}% matches resource limit [total mem amount{1}{2}%]", process.total_mem_percent, r.compOperator, r.limit / 10.0);
                         okay = false;
                     }
                     else
-                        report += string.Format("total mem amount check succeeded [current total mem amount={0}%]", process.total_mem_percent / 10.0);
+                        report += string.Format("total mem amount check succeeded [current total mem amount={0}%]", process.total_mem_percent);
                     break;
 
                 default:
@@ -1409,7 +1409,7 @@ namespace ChMonitoring
 
                         if (td.limit_percent >= 0) {
                                 if (Util.EvalQExpression(td.compOperator, filesystem.inode_percent, td.limit_percent)) {
-                                        Event.Post(s, MonitEventType.Event_Resource, MonitStateType.State_Failed, td.action, "inode usage {0}% matches resource limit [inode usage{1}{2}%]", filesystem.inode_percent/10f, td.compOperator, td.limit_percent/10f);
+                                        Event.Post(s, MonitEventType.Event_Resource, MonitStateType.State_Failed, td.action, "inode usage {0}% matches resource limit [inode usage{1}{2}%]", filesystem.inode_percent, td.compOperator, td.limit_percent);
                                         return;
                                 }
                         } else {
@@ -1418,12 +1418,12 @@ namespace ChMonitoring
                                         return;
                                 }
                         }
-                        Event.Post(s, MonitEventType.Event_Resource, MonitStateType.State_Succeeded, td.action, "inode usage test succeeded [current inode usage={0}%]", filesystem.inode_percent/10f);
+                        Event.Post(s, MonitEventType.Event_Resource, MonitStateType.State_Succeeded, td.action, "inode usage test succeeded [current inode usage={0}%]", filesystem.inode_percent);
                         return;
                 case MonitResourceType.Resource_Space:
                     if (td.limit_percent >= 0) {
                             if (Util.EvalQExpression(td.compOperator, filesystem.space_percent, td.limit_percent)) {
-                                    Event.Post(s, MonitEventType.Event_Resource, MonitStateType.State_Failed, td.action, "space usage {0}% matches resource limit [space usage{1}{2}%]", filesystem.space_percent/10f, td.compOperator, td.limit_percent/10f);
+                                    Event.Post(s, MonitEventType.Event_Resource, MonitStateType.State_Failed, td.action, "space usage {0}% matches resource limit [space usage{1}{2}%]", filesystem.space_percent, td.compOperator, td.limit_percent);
                                     return;
                             }
                     } else {
@@ -1436,7 +1436,7 @@ namespace ChMonitoring
                                     return;
                             }
                     }
-                    Event.Post(s, MonitEventType.Event_Resource, MonitStateType.State_Succeeded, td.action, "space usage test succeeded [current space usage={0}%]", filesystem.space_percent / 10f);
+                    Event.Post(s, MonitEventType.Event_Resource, MonitStateType.State_Succeeded, td.action, "space usage test succeeded [current space usage={0}%]", filesystem.space_percent);
                     return;
 
                 default:

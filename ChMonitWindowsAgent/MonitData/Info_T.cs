@@ -17,10 +17,10 @@ namespace ChMonitoring.MonitData
         public long f_filesfree; /**< Free file nodes in filesystem */
         public int flags; /**< Filesystem flags from actual cycle */
         public int gid; /**< Owner's gid */
-        public short inode_percent; /**< Used inode percentage * 10 */
+        public float inode_percent; /**< Used inode percentage */
         public long inode_total; /**< Used inode total objects */
         public ushort mode;
-        public short space_percent; /**< Used space percentage * 10 */
+        public float space_percent; /**< Used space percentage */
         public long space_total; /**< Used space total blocks */
         public int uid; /**< Owner's uid */
     }
@@ -59,16 +59,16 @@ namespace ChMonitoring.MonitData
         public int _pid; /**< Process PID from last cycle */
         public int _ppid; /**< Process parent PID from last cycle */
         public int children;
-        public short cpu_percent; /**< percentage * 10 */
+        public float cpu_percent; /**< percentage */
         public int euid; /**< Effective Process UID */
         public int gid; /**< Process GID */
-        public long mem_kbyte;
-        public short mem_percent; /**< percentage * 10 */
+        public ulong mem_kbyte;
+        public float mem_percent; /**< percentage */
         public int pid; /**< Process PID from actual cycle */
         public int ppid; /**< Process parent PID from actual cycle */
-        public short total_cpu_percent; /**< percentage * 10 */
-        public long total_mem_kbyte;
-        public short total_mem_percent; /**< percentage * 10 */
+        public float total_cpu_percent; /**< percentage */
+        public ulong total_mem_kbyte;
+        public float total_mem_percent; /**< percentage */
         public int uid; /**< Process UID */
         public TimeSpan uptime;
         public bool zombie;

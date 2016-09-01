@@ -94,7 +94,7 @@ namespace ChMonitoring.MonitData
     {
         public EventAction_T action; /**< Description of the action upon event occurence */
         public string compOperator; /**< Comparison operator */
-        public long limit; /**< Limit of the resource */
+        public double limit; /**< Limit of the resource */
         public MonitResourceType resource_id; /**< Which value is checked */
     }
 
@@ -119,7 +119,7 @@ namespace ChMonitoring.MonitData
         public EventAction_T action; /**< Description of the action upon event occurence */
         public string compOperator; /**< Comparison operator */
         public long limit_absolute; /**< Watermark - blocks */
-        public short limit_percent; /**< Watermark - percent */
+        public float limit_percent; /**< Watermark - percent */
         public MonitResourceType resource; /**< Whether to check inode or space */
     }
 

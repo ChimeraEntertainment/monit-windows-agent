@@ -750,8 +750,8 @@ namespace ChMonitoring.Http
                 res.AppendFormat(
                     "<td align='right'>[{0}]&nbsp;[{1}]&nbsp;[{2}]</td><td align='right'>{3}%us,&nbsp;{4}%sy</td>",
                     systeminfo.loadavg[0], systeminfo.loadavg[1], systeminfo.loadavg[2],
-                    systeminfo.total_cpu_user_percent > 0 ? systeminfo.total_cpu_user_percent/10f : 0,
-                    systeminfo.total_cpu_syst_percent > 0 ? systeminfo.total_cpu_syst_percent/10f : 0
+                    systeminfo.total_cpu_user_percent > 0 ? systeminfo.total_cpu_user_percent : 0,
+                    systeminfo.total_cpu_syst_percent > 0 ? systeminfo.total_cpu_syst_percent : 0
                     //#ifdef HAVE_CPU_WAIT
                     //                                    ",&nbsp;%.1f%%wa"
                     //#endif
@@ -759,9 +759,9 @@ namespace ChMonitoring.Http
                     //                                    , systeminfo.total_cpu_wait_percent > 0 ? systeminfo.total_cpu_wait_percent/10. : 0
                     //#endif
                     );
-                res.AppendFormat("<td align='right'>{0}% [{1}]</td>", systeminfo.total_mem_percent/10f,
+                res.AppendFormat("<td align='right'>{0}% [{1}]</td>", systeminfo.total_mem_percent,
                     systeminfo.total_mem_kbyte*1024);
-                res.AppendFormat("<td align='right'>{0}% [{1}]</td>", systeminfo.total_swap_percent/10f,
+                res.AppendFormat("<td align='right'>{0}% [{1}]</td>", systeminfo.total_swap_percent,
                     systeminfo.total_swap_kbyte*1024);
             }
             res.Append("</tr></table>");
@@ -808,10 +808,10 @@ namespace ChMonitoring.Http
                     {
                         res.AppendFormat("<td align='right' class='{0}'>{1}%</td>",
                             (s.error & (int) MonitEventType.Event_Resource) != 0 ? "red-text" : "",
-                            process.total_cpu_percent/10.0);
+                            process.total_cpu_percent);
                         res.AppendFormat("<td align='right' class='{0}'>{1}% [{2}]</td>",
                             (s.error & (int) MonitEventType.Event_Resource) != 0 ? "red-text" : "",
-                            process.total_mem_percent/10.0, process.total_mem_kbyte*1024);
+                            process.total_mem_percent, process.total_mem_kbyte*1024);
                     }
                 }
                 res.Append("</tr>");
@@ -855,12 +855,12 @@ namespace ChMonitoring.Http
                 }
                 else
                 {
-                    res.AppendFormat("<td align='right'>{0}% [{1}]</td>", filesystem.space_percent/10f,
+                    res.AppendFormat("<td align='right'>{0}% [{1}]</td>", filesystem.space_percent,
                         filesystem.f_bsize > 0 ? (filesystem.space_total*filesystem.f_bsize).ToString() : "0 MB");
                     if (filesystem.f_files > 0)
                     {
                         res.AppendFormat("<td align='right'>{0}% [{1} objects]</td>",
-                            filesystem.inode_percent/10f,
+                            filesystem.inode_percent,
                             filesystem.inode_total);
                     }
                     else
@@ -1742,7 +1742,7 @@ namespace ChMonitoring.Http
                 {
                     var process = s.inf as ProcessInfo_T;
                     res.AppendFormat("<td class='{0}'>{1}% (Usage / Number of CPUs)</td>",
-                        (s.error & (int) MonitEventType.Event_Resource) != 0 ? "red-text" : "", process.cpu_percent/10.0);
+                        (s.error & (int) MonitEventType.Event_Resource) != 0 ? "red-text" : "", process.cpu_percent);
                 }
                 res.Append("</tr>");
             }
@@ -1761,7 +1761,7 @@ namespace ChMonitoring.Http
                     var process = s.inf as ProcessInfo_T;
                     res.AppendFormat("<td class='{0}'>{1}%</td>",
                         (s.error & (int) MonitEventType.Event_Resource) != 0 ? "red-text" : "",
-                        process.total_cpu_percent/10.0);
+                        process.total_cpu_percent);
                 }
                 res.Append("</tr>");
             }
@@ -1781,7 +1781,7 @@ namespace ChMonitoring.Http
                 {
                     var process = s.inf as ProcessInfo_T;
                     res.AppendFormat("<td class='{0}'>{1}% [{2}]</td>",
-                        (s.error & (int) MonitEventType.Event_Resource) != 0 ? "red-text" : "", process.mem_percent/10.0,
+                        (s.error & (int) MonitEventType.Event_Resource) != 0 ? "red-text" : "", process.mem_percent,
                         (process.mem_kbyte*1024));
                 }
                 res.Append("</tr>");
@@ -1803,7 +1803,7 @@ namespace ChMonitoring.Http
                     var process = s.inf as ProcessInfo_T;
                     res.AppendFormat("<td class='{0}'>{1}% [{2}]</td>",
                         (s.error & (int) MonitEventType.Event_Resource) != 0 ? "red-text" : "",
-                        process.total_mem_percent/10.0, (process.total_mem_kbyte*1024));
+                        process.total_mem_percent, (process.total_mem_kbyte*1024));
                 }
                 res.Append("</tr>");
             }
@@ -1836,13 +1836,13 @@ namespace ChMonitoring.Http
                 res.AppendFormat("<td class='{0}'>{1}%us {2}%sy {3}%wa{4}",
                     (s.error & (int) MonitEventType.Event_Resource) != 0 ? "red-text" : "",
                     MonitWindowsAgent.systeminfo.total_cpu_user_percent > 0
-                        ? MonitWindowsAgent.systeminfo.total_cpu_user_percent/10f
+                        ? MonitWindowsAgent.systeminfo.total_cpu_user_percent
                         : 0,
                     MonitWindowsAgent.systeminfo.total_cpu_syst_percent > 0
-                        ? MonitWindowsAgent.systeminfo.total_cpu_syst_percent/10f
+                        ? MonitWindowsAgent.systeminfo.total_cpu_syst_percent
                         : 0,
                     MonitWindowsAgent.systeminfo.total_cpu_wait_percent > 0
-                        ? MonitWindowsAgent.systeminfo.total_cpu_wait_percent/10f
+                        ? MonitWindowsAgent.systeminfo.total_cpu_wait_percent
                         : 0, "</td>");
             }
             res.Append("</tr>");
@@ -1861,7 +1861,7 @@ namespace ChMonitoring.Http
                 res.AppendFormat("<td class='{0}'>{1} [{2}%]</td>",
                     (s.error & (int) MonitEventType.Event_Resource) != 0 ? "red-text" : "",
                     (MonitWindowsAgent.systeminfo.total_mem_kbyte*1024),
-                    (MonitWindowsAgent.systeminfo.total_mem_percent/10f));
+                    (MonitWindowsAgent.systeminfo.total_mem_percent));
             }
             res.Append("</tr>");
         }
@@ -1879,7 +1879,7 @@ namespace ChMonitoring.Http
                 res.AppendFormat("<td class='{0}'>{1} [{2}%]</td>",
                     (s.error & (int) MonitEventType.Event_Resource) != 0 ? "red-text" : "",
                     (MonitWindowsAgent.systeminfo.total_swap_kbyte*1024),
-                    (MonitWindowsAgent.systeminfo.total_swap_percent/10f));
+                    (MonitWindowsAgent.systeminfo.total_swap_percent));
             }
             res.Append("</tr>");
         }
@@ -2152,10 +2152,10 @@ namespace ChMonitoring.Http
                                 res.AppendFormat("  {0} {1}\n", txtFormatting("memory total", 33),
                                     (process.total_mem_kbyte*1024));
                                 res.AppendFormat("  {0} {1}%\n  {2} {3}%\n  {4} {5}%\n  {6} {7}%\n",
-                                    txtFormatting("memory percent", 33), process.mem_percent/10.0,
-                                    txtFormatting("memory percent total", 33), process.total_mem_percent/10.0,
-                                    txtFormatting("cpu percent", 33), process.cpu_percent/10.0,
-                                    txtFormatting("cpu percent total", 33), process.total_cpu_percent/10.0);
+                                    txtFormatting("memory percent", 33), process.mem_percent,
+                                    txtFormatting("memory percent total", 33), process.total_mem_percent,
+                                    txtFormatting("cpu percent", 33), process.cpu_percent,
+                                    txtFormatting("cpu percent total", 33), process.total_cpu_percent);
                             }
                             break;
                         default:
@@ -2201,20 +2201,20 @@ namespace ChMonitoring.Http
                             txtFormatting("load average", 33), MonitWindowsAgent.systeminfo.loadavg[0],
                             MonitWindowsAgent.systeminfo.loadavg[1], MonitWindowsAgent.systeminfo.loadavg[2], "cpu",
                             MonitWindowsAgent.systeminfo.total_cpu_user_percent > 0
-                                ? MonitWindowsAgent.systeminfo.total_cpu_user_percent/10f
+                                ? MonitWindowsAgent.systeminfo.total_cpu_user_percent
                                 : 0,
                             MonitWindowsAgent.systeminfo.total_cpu_syst_percent > 0
-                                ? MonitWindowsAgent.systeminfo.total_cpu_syst_percent/10f
+                                ? MonitWindowsAgent.systeminfo.total_cpu_syst_percent
                                 : 0,
                             MonitWindowsAgent.systeminfo.total_cpu_wait_percent > 0
-                                ? MonitWindowsAgent.systeminfo.total_cpu_wait_percent/10f
+                                ? MonitWindowsAgent.systeminfo.total_cpu_wait_percent
                                 : 0);
                         res.AppendFormat("  {0} {1} [{2}%]\n", txtFormatting("memory usage", 33),
                             (MonitWindowsAgent.systeminfo.total_mem_kbyte*1024),
-                            MonitWindowsAgent.systeminfo.total_mem_percent/10f);
+                            MonitWindowsAgent.systeminfo.total_mem_percent);
                         res.AppendFormat("  {0} {1} [{2}%]\n", txtFormatting("swap usage", 33),
                             (MonitWindowsAgent.systeminfo.total_swap_kbyte*1024f),
-                            MonitWindowsAgent.systeminfo.total_swap_percent/10f);
+                            MonitWindowsAgent.systeminfo.total_swap_percent);
                     }
                     //                        if (s.type == Service_Program) {
                     //                                if (s.program.started) {

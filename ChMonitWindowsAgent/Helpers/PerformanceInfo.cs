@@ -5,55 +5,51 @@ namespace ChMonitoring.Helpers
 {
     public static class PerformanceInfo
     {
-        [DllImport("psapi.dll", SetLastError = true)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        private class MEMORYSTATUSEX
+        {
+            public uint dwLength;
+            public uint dwMemoryLoad;
+            public ulong ullTotalPhys;
+            public ulong ullAvailPhys;
+            public ulong ullTotalPageFile;
+            public ulong ullAvailPageFile;
+            public ulong ullTotalVirtual;
+            public ulong ullAvailVirtual;
+            public ulong ullAvailExtendedVirtual;
+            public MEMORYSTATUSEX()
+            {
+                this.dwLength = (uint)Marshal.SizeOf(this);
+            }
+        }
+
+
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetPerformanceInfo([Out] out PerformanceInformation PerformanceInformation,
-            [In] int Size);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
 
-        [StructLayout(LayoutKind.Sequential)]
-        public struct PerformanceInformation
+        public static ulong GetPhysicalAvailableMemoryInKiB()
         {
-            public int Size;
-            public IntPtr CommitTotal;
-            public IntPtr CommitLimit;
-            public IntPtr CommitPeak;
-            public IntPtr PhysicalTotal;
-            public IntPtr PhysicalAvailable;
-            public IntPtr SystemCache;
-            public IntPtr KernelTotal;
-            public IntPtr KernelPaged;
-            public IntPtr KernelNonPaged;
-            public IntPtr PageSize;
-            public int HandlesCount;
-            public int ProcessCount;
-            public int ThreadCount;
+            ulong availableMemory = 0;
+            MEMORYSTATUSEX memStatus = new MEMORYSTATUSEX();
+            if (GlobalMemoryStatusEx(memStatus))
+            {
+                availableMemory = memStatus.ullAvailPhys;
+            }
+
+            return availableMemory;
         }
 
-        public static uint GetPhysicalAvailableMemoryInKiB()
+        public static ulong GetTotalMemoryInKiB()
         {
-            var pi = new PerformanceInformation();
-            if (GetPerformanceInfo(out pi, Marshal.SizeOf(pi)))
+            ulong installedMemory = 0;
+            MEMORYSTATUSEX memStatus = new MEMORYSTATUSEX();
+            if (GlobalMemoryStatusEx(memStatus))
             {
-                return Convert.ToUInt32((pi.PhysicalAvailable.ToInt64()*pi.PageSize.ToInt64()/1024));
-            }
-            else
-            {
-                return 0;
+                installedMemory = memStatus.ullTotalPhys;
             }
 
-        }
-
-        public static uint GetTotalMemoryInKiB()
-        {
-            var pi = new PerformanceInformation();
-            if (GetPerformanceInfo(out pi, Marshal.SizeOf(pi)))
-            {
-                return Convert.ToUInt32((pi.PhysicalTotal.ToInt64() * pi.PageSize.ToInt64() / 1024));
-            }
-            else
-            {
-                return 0;
-            }
+            return installedMemory;
 
         }
     }

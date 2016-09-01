@@ -169,14 +169,14 @@ namespace ChMonitoring
                                 filesystem.uid,
                                 filesystem.gid,
                                 filesystem.flags,
-                                filesystem.space_percent/10f,
+                                filesystem.space_percent,
                                 filesystem.f_bsize > 0 ? filesystem.space_total/1048576.0*filesystem.f_bsize : 0,
                                 filesystem.f_bsize > 0 ? filesystem.f_blocks/1048576.0*filesystem.f_bsize : 0);
                             if (filesystem.f_files > 0)
                             {
                                 centerString.AppendFormat(
                                     "<inode><percent>{0}</percent><usage>{1}</usage><total>{2}</total></inode>",
-                                    filesystem.inode_percent/10f,
+                                    filesystem.inode_percent,
                                     filesystem.inode_total,
                                     filesystem.f_files);
                             }
@@ -248,12 +248,12 @@ namespace ChMonitoring
                                 centerString.AppendFormat(
                                     "<children>{0}</children><memory><percent>{1}</percent><percenttotal>{2}</percenttotal><kilobyte>{3}</kilobyte><kilobytetotal>{4}</kilobytetotal></memory><cpu><percent>{5}</percent><percenttotal>{6}</percenttotal></cpu>",
                                     process.children,
-                                    process.mem_percent/10f,
-                                    process.total_mem_percent/10f,
+                                    process.mem_percent,
+                                    process.total_mem_percent,
                                     process.mem_kbyte,
                                     process.total_mem_kbyte,
-                                    process.cpu_percent/10f,
-                                    process.total_cpu_percent/10f);
+                                    process.cpu_percent,
+                                    process.total_cpu_percent);
                             }
                             break;
 
@@ -302,14 +302,14 @@ namespace ChMonitoring
                             MonitWindowsAgent.systeminfo.loadavg[1],
                             MonitWindowsAgent.systeminfo.loadavg[2],
                             MonitWindowsAgent.systeminfo.total_cpu_user_percent > 0
-                                ? MonitWindowsAgent.systeminfo.total_cpu_user_percent/10f
+                                ? MonitWindowsAgent.systeminfo.total_cpu_user_percent
                                 : 0,
                             MonitWindowsAgent.systeminfo.total_cpu_syst_percent > 0
-                                ? MonitWindowsAgent.systeminfo.total_cpu_syst_percent/10f
+                                ? MonitWindowsAgent.systeminfo.total_cpu_syst_percent
                                 : 0,
-                            MonitWindowsAgent.systeminfo.total_mem_percent/10f,
+                            MonitWindowsAgent.systeminfo.total_mem_percent,
                             MonitWindowsAgent.systeminfo.total_mem_kbyte,
-                            MonitWindowsAgent.systeminfo.total_swap_percent/10f,
+                            MonitWindowsAgent.systeminfo.total_swap_percent,
                             MonitWindowsAgent.systeminfo.total_swap_kbyte);
                     }
                     if (S.type == MonitServiceType.Service_Program && S.program.started != null)

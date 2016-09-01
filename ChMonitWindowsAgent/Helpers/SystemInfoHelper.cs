@@ -22,9 +22,8 @@ namespace ChMonitoring.Helpers
 
             systeminfo.cpus = SystemStats.GetCPUCoreCount();
             systeminfo.total_cpu_syst_percent = systemStats.GetCPULoadPercentage();
-            systeminfo.mem_kbyte_max = SystemStats.GetMemorySizeKB();
-            systeminfo.total_mem_percent =
-                Convert.ToInt16((1 - (int) (PerformanceInfo.GetPhysicalAvailableMemoryInKiB()/(float) totalMem))*10);
+            systeminfo.mem_kbyte_max = totalMem;
+            systeminfo.total_mem_percent = (1 - ((float)PerformanceInfo.GetPhysicalAvailableMemoryInKiB() / (float)totalMem)) * 10;
             systeminfo.total_mem_kbyte = totalMem - PerformanceInfo.GetPhysicalAvailableMemoryInKiB();
 
             systeminfo.swap_kbyte_max = 0;
