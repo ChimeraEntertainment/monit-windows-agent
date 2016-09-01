@@ -42,7 +42,7 @@ namespace ChMonitoring
             request.Headers.Add("Pragma", "no-cache");
             request.UserAgent = string.Format("Monit/{0}", MonitWindowsAgent.VERSION);
             request.Accept = "*/*";
-
+            request.Connection = "Close";
             request.Method = "POST";
             request.ContentType = "text/xml";
 

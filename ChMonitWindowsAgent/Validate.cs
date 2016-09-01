@@ -1391,7 +1391,7 @@ namespace ChMonitoring
          */
         private static void checkFilesystemResources(Service_T s, Filesystem_T td)
         {
-            if ((td.limit_percent < 0) && (td.limit_absolute < 0))
+            if ((td.limit_percent <= 0) && (td.limit_absolute <= 0))
             {
                 Logger.Log.ErrorFormat("'{0}' error: filesystem limit not set", s.name);
                 return;
@@ -1407,7 +1407,7 @@ namespace ChMonitoring
                                 return;
                         }
 
-                        if (td.limit_percent >= 0) {
+                        if (td.limit_percent > 0) {
                                 if (Util.EvalQExpression(td.compOperator, filesystem.inode_percent, td.limit_percent)) {
                                         Event.Post(s, MonitEventType.Event_Resource, MonitStateType.State_Failed, td.action, "inode usage {0}% matches resource limit [inode usage{1}{2}%]", filesystem.inode_percent, td.compOperator, td.limit_percent);
                                         return;
@@ -1421,7 +1421,7 @@ namespace ChMonitoring
                         Event.Post(s, MonitEventType.Event_Resource, MonitStateType.State_Succeeded, td.action, "inode usage test succeeded [current inode usage={0}%]", filesystem.inode_percent);
                         return;
                 case MonitResourceType.Resource_Space:
-                    if (td.limit_percent >= 0) {
+                    if (td.limit_percent > 0) {
                             if (Util.EvalQExpression(td.compOperator, filesystem.space_percent, td.limit_percent)) {
                                     Event.Post(s, MonitEventType.Event_Resource, MonitStateType.State_Failed, td.action, "space usage {0}% matches resource limit [space usage{1}{2}%]", filesystem.space_percent, td.compOperator, td.limit_percent);
                                     return;
