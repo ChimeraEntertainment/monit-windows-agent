@@ -158,6 +158,10 @@ namespace ChMonitoring.Helpers
                                 });
                         }
                     }
+                    else
+                    {
+                        Logger.Log.ErrorFormat("error: No Resources defined for Process: {0}", sc.Name);
+                    }
                 }
                 else if (sc is FilesystemConfig)
                 {
@@ -182,6 +186,10 @@ namespace ChMonitoring.Helpers
                                 });
                         }
                     }
+                    else
+                    {
+                        Logger.Log.ErrorFormat("error: No Filesystems defined for Drive: {0}", sc.Name);
+                    }
                 }
                 else
                     return null;
@@ -189,23 +197,33 @@ namespace ChMonitoring.Helpers
                 current.mode = (MonitMonitorModeType) sc.MonitoringMode;
 
                 if (sc.ActionRate != null)
+                {
                     AddActionRate(current,
                         new ActionRate_T
                         {
                             count = sc.ActionRate.Count,
                             cycle = sc.ActionRate.Cycle,
                             action =
-                                GetEventAction((MonitActionType) sc.ActionRate.ActionType, MonitActionType.Action_Alert)
+                                GetEventAction((MonitActionType)sc.ActionRate.ActionType, MonitActionType.Action_Alert)
                         });
+                }
+                else
+                {
+                    Logger.Log.ErrorFormat("warning: No ActionRate defined for Service: {0}", sc.Name);
+                }
 
                 if (sc.Every != null)
+                {
                     current.every = new CycleEvery_T
                     {
-                        type = (MonitEveryType) sc.Every.Type,
+                        type = (MonitEveryType)sc.Every.Type,
                         number = sc.Every.CycleNumber
                     };
+                }
                 else
-                    current.every = new CycleEvery_T {type = MonitEveryType.Every_Cycle, number = 0};
+                {
+                    current.every = new CycleEvery_T { type = MonitEveryType.Every_Cycle, number = 0 };
+                }
             }
 
             if (Util.ExistService(name))
