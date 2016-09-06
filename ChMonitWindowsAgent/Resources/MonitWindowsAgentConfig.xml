@@ -15,7 +15,11 @@
         <Resource Type="1" ComparisonOperator=">" Limit="800" ActionType="2" />
       </Resources>
     </Process>
-    <Filesystem Name="test-hard-drive-name"></Filesystem>
+    <Filesystem Name="test-hard-drive-name">
+      <Filesystems>
+        <Filesystem Type="11" ComparisonOperator=">" LimitPercent="90" ActionType="2" />
+      </Filesystems>
+    </Filesystem>
   </Services>
   <FailedStarts>5</FailedStarts>
   <MMonits>
